@@ -1,0 +1,22 @@
+{
+  "manifest_version": 2,
+
+  "name": "Youtube Collections",
+  "description": "Collections for Youtube. You know, like we used to have until it was removed for no reason.",
+  "version": "0.1",
+  "icons": {
+    "16": "collections-16.png",
+    "48": "collections-48.png",
+    "128": "collections-128.png"
+  },
+  "permissions": [
+    "https://www.youtube.com/"
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/"],
+      "js": []
+    }
+  ]
+}
