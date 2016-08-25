@@ -10,13 +10,19 @@
     "128": "collections-128.png"
   },
   "permissions": [
-    "https://www.youtube.com/"
+    "https://www.youtube.com/",
     "storage"
   ],
   "content_scripts": [
     {
-      "matches": ["https://www.youtube.com/"],
-      "js": []
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["test.js"],
+      "run_at": "document_end"
+    },
+    {
+      "matches": ["https://www.youtube.com/subscription_manager"],
+      "js": ["manager.js"],
+      "run_at": "document_end"
     }
   ]
 }
