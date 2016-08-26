@@ -38,6 +38,41 @@ function _getSubscriptionsSection () {
   })
 }
 
+function _initTestDb () {
+  var goodId = HashID.generate()
+  var badId = HashID.generate()
+
+  var subscriptions = {
+    'UCItISwABVRjboRSBBi6WYTA': goodId,
+    'UCeBMccz-PDZf6OB4aV6a3eA': goodId,
+    'UCrZTN5qnHqGhZglG3wUWKng': badId,
+    'UCsQnAt5I56M-qx4OgCoVmeA': badId
+  }
+
+  var collections = {}
+
+  collections[goodId] = {
+    name: 'good',
+    channels: [
+      'UCItISwABVRjboRSBBi6WYTA',
+      'UCeBMccz-PDZf6OB4aV6a3eA'
+    ]
+  }
+
+  collections[badId] = {
+    name: 'bad',
+    channels: [
+      'UCrZTN5qnHqGhZglG3wUWKng',
+      'UCsQnAt5I56M-qx4OgCoVmeA'
+    ]
+  }
+
+  storage.set({
+    subscriptions: subscriptions,
+    collections: collections
+  })
+}
+
 Promise.all([
   _getSubscriptionsSection(),
   __colections
@@ -51,5 +86,6 @@ Promise.all([
       count: elem.querySelector('span.no-count') ? 0 : parseInt(elem.querySelector('.guide-count-value').textContent),
       name: elem.querySelector('a.guide-item').getAttribute('title')
     }
+    elem.querySelector('.display-name > span').textContent = channel.name + collections[subscriptions[channel.id]].name
   })
 })
