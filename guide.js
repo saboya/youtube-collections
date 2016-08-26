@@ -1,17 +1,29 @@
 'use strict'
 
 const _guide_element = document.querySelector('#guide')
+const __colections = storage.get('collections')
 
-function init () {
-  if(_guide_element !== null) {
-    if(document.querySelectorAll('#guide-subscriptions-section').length === 0) {
+// chrome.tabs.insertCSS(integer tabId, object details, function callback)
 
+function _getSubscriptionsSection () {
+  return new Promise((resolve, reject) => {
+    var _getGuideSection = () => {
+      return document.querySelector('#guide-subscriptions-section')
+    }
+
+    if (_getGuideSection() !== null) {
+      resolve(_getGuideSection())
+    } else {
       var observer = new MutationObserver(mutations => {
         mutations.forEach(mutation => {
-          if(mutation.type === 'childList' && mutation.target === _guide_element) {
+          if (mutation.type === 'childList' && mutation.target === _guide_element) {
             observer.disconnect()
             observer.takeRecords()
-            document.dispatchEvent(new CustomEvent('GUIDE_SUBSCRIPTIONS_LOADED', { "detail": document.querySelector('#guide-channels') }))
+            if (_getGuideSection() !== null) {
+              resolve(_getGuideSection())
+            }else {
+              reject('Subscriptions not found in Guide')
+            }
           }
         })
       })
@@ -23,32 +35,21 @@ function init () {
         characterData: true
       })
     }
-    else {
-      document.dispatchEvent(new CustomEvent('GUIDE_SUBSCRIPTIONS_LOADED', { "detail": document.querySelector('#guide-channels') }))
-    }
-  }
-
-
-  chrome.storage.sync.get('collections', items => {
-    console.log(items)
   })
-
-/*if (!collections) {
-  console.log('Initializing collections...')
-  chrome.storage.sync.set('collections', () => {
-    console.log('Collections initialized.')
-  })
-}*/
 }
 
-// Add an event listener
-document.addEventListener('GUIDE_SUBSCRIPTIONS_LOADED',event => {
-  event.detail.querySelectorAll('li.guide-channel').forEach(elem => {
+Promise.all([
+  _getSubscriptionsSection(),
+  __colections
+]).then(valueArr => {
+  var subSection = valueArr[0]
+  var _collections = valueArr[1]
+
+  subSection.querySelectorAll('#guide-channels > li.guide-channel').forEach(elem => {
     var channel = {
-      id: elem.getAttribute('id').slice(0,24),
-      count: elem.querySelector('span.no-count') ? 0 : parseInt(elem.querySelector('.guide-count-value').textContent)
+      id: elem.querySelector('a').getAttribute('data-external-id'),
+      count: elem.querySelector('span.no-count') ? 0 : parseInt(elem.querySelector('.guide-count-value').textContent),
+      name: elem.querySelector('a.guide-item').getAttribute('title')
     }
   })
 })
-
-init()

@@ -16,12 +16,12 @@
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/*"],
-      "js": ["test.js"],
+      "js": ["storage.js","guide.js"],
       "run_at": "document_end"
     },
     {
       "matches": ["https://www.youtube.com/subscription_manager"],
-      "js": ["manager.js"],
+      "js": ["storage.js","manager.js"],
       "run_at": "document_end"
     }
   ]
