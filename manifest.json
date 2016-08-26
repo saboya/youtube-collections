@@ -17,13 +17,13 @@
     {
       "matches": ["https://www.youtube.com/*"],
       "css": ["collections.css"],
-      "js": ["storage.js","guide.js"],
+      "js": ["hashid.js","storage.js","guide.js"],
       "run_at": "document_end"
     },
     {
       "matches": ["https://www.youtube.com/subscription_manager"],
       "css": ["collections.css"],
-      "js": ["storage.js","manager.js"],
+      "js": ["hashid.js","storage.js","manager.js"],
       "run_at": "document_end"
     }
   ]
