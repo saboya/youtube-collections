@@ -1,0 +1,9 @@
+.collection-item {
+  background: transparent;
+  color: #cc181e;
+}
+
+.collection-item:hover {
+  background: #cc181e;
+  color: #fff;
+}
