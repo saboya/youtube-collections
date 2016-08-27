@@ -76,19 +76,11 @@ function _initTestDb () {
   var collections = {}
 
   collections[goodId] = {
-    name: 'good',
-    channels: [
-      'UCItISwABVRjboRSBBi6WYTA',
-      'UCeBMccz-PDZf6OB4aV6a3eA'
-    ]
+    name: 'good'
   }
 
   collections[badId] = {
-    name: 'bad',
-    channels: [
-      'UCrZTN5qnHqGhZglG3wUWKng',
-      'UCsQnAt5I56M-qx4OgCoVmeA'
-    ]
+    name: 'bad'
   }
 
   storage.set({
