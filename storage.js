@@ -7,7 +7,7 @@ storage.get = function (keys) {
     chrome.storage.sync.get(keys, obj => {
       if (chrome.runtime.lastError === undefined) {
         resolve(obj)
-      }else {
+      } else {
         reject(chrome.runtime.lastError)
       }
     })
@@ -19,7 +19,7 @@ storage.set = function (keys) {
     chrome.storage.sync.set(keys, () => {
       if (chrome.runtime.lastError === undefined) {
         resolve(true)
-      }else {
+      } else {
         reject(chrome.runtime.lastError)
       }
     })
@@ -31,7 +31,7 @@ storage.remove = function (keys) {
     chrome.storage.sync.remove(keys, () => {
       if (chrome.runtime.lastError === undefined) {
         resolve(true)
-      }else {
+      } else {
         reject(chrome.runtime.lastError)
       }
     })
@@ -43,7 +43,7 @@ storage.clear = function() {
     chrome.storage.sync.clear(() => {
       if (chrome.runtime.lastError === undefined) {
         resolve(true)
-      }else {
+      } else {
         reject(chrome.runtime.lastError)
       }
     })
