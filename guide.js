@@ -2,8 +2,34 @@
 
 const _guide_element = document.querySelector('#guide')
 const __colections = storage.get('collections')
+const __subscriptions = storage.get('subscriptions')
+const __channels = []
 
 // chrome.tabs.insertCSS(integer tabId, object details, function callback)
+
+function _getHtmlForGuideButton (title,count) {
+  return '<li class="guide-channel collection-item guide-notification-item overflowable-list-item" role="menuitem">\
+  <a class="guide-item yt-uix-sessionlink yt-valign spf-link" href="#" title="'+title+'">\
+    <span class="yt-valign-container">\
+      <span class="thumb">\
+        <span class="video-thumb  yt-thumb yt-thumb-20">\
+          <span class="yt-thumb-square">\
+            <span class="yt-thumb-clip">\
+                <span class="vertical-align"></span>\
+            </span>\
+          </span>\
+        </span>\
+      </span>\
+      <span class="display-name ">\
+        <span>'+title+'</span>\
+      </span>\
+    </span>\
+    <span class="guide-count yt-uix-tooltip yt-valign">\
+      <span class="yt-valign-container guide-count-value">'+count+'</span>\
+    </span>\
+  </a>\
+</li>'
+}
 
 function _getSubscriptionsSection () {
   return new Promise((resolve, reject) => {
@@ -68,24 +94,44 @@ function _initTestDb () {
   }
 
   storage.set({
-    subscriptions: subscriptions,
-    collections: collections
+    'subscriptions': subscriptions,
+    'collections': collections
   })
+
+  console.log('test db initialized')
 }
 
 Promise.all([
   _getSubscriptionsSection(),
-  __colections
+  __colections,
+  __subscriptions
 ]).then(valueArr => {
   var subSection = valueArr[0]
-  var _collections = valueArr[1]
+  var collections = valueArr[1].collections
+  var subscriptions = valueArr[2].subscriptions
 
-  subSection.querySelectorAll('#guide-channels > li.guide-channel').forEach(elem => {
-    var channel = {
-      id: elem.querySelector('a').getAttribute('data-external-id'),
-      count: elem.querySelector('span.no-count') ? 0 : parseInt(elem.querySelector('.guide-count-value').textContent),
-      name: elem.querySelector('a.guide-item').getAttribute('title')
+  subSection.querySelectorAll('#guide-channels > li.guide-channel').forEach(node => {
+    let channelId = node.querySelector('a').getAttribute('data-external-id')
+      if(subscriptions[channelId] !== undefined) {
+      __channels.push({
+        id: channelId,
+        count: node.querySelector('span.no-count') ? 0 : parseInt(node.querySelector('.guide-count-value').textContent),
+        name: node.querySelector('a.guide-item').getAttribute('title'),
+        node: node,
+        collection: subscriptions[channelId]
+      })
     }
-    elem.querySelector('.display-name > span').textContent = channel.name + collections[subscriptions[channel.id]].name
   })
+
+  var toInject = ''
+
+  for (var key in collections) {
+    let channels = __channels.filter(channel => channel.collection === key)
+    channels.forEach(channel => {
+      channel.node.style.display = 'none'
+    })
+    toInject += _getHtmlForGuideButton(collections[key].name,channels.reduce((a,c) => a + c.count,0))
+  }
+
+  document.getElementById('guide-channels').innerHTML = toInject + document.getElementById('guide-channels').innerHTML
 })

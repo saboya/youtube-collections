@@ -1,9 +1,17 @@
-.collection-item {
+.collection-item a {
   background: transparent;
-  color: #cc181e;
 }
 
-.collection-item:hover {
-  background: #cc181e;
-  color: #fff;
+.collection-item a:hover {
+  background: #cc181e !important;
+  color: #fff !important;
+}
+
+.collection-item a:hover .yt-thumb {
+  background-image:url('chrome-extension://__MSG_@@extension_id__/img/collection-icon-white-20.png');
+}
+
+.collection-item .yt-thumb {
+  background-color: transparent;
+  background-image:url('chrome-extension://__MSG_@@extension_id__/img/collection-icon-gray-20.png');
 }
