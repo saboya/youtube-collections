@@ -13,6 +13,9 @@
     "https://www.youtube.com/",
     "storage"
   ],
+  "web_accessible_resources": [
+    "img/*"
+  ],
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/*"],
