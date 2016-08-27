@@ -14,13 +14,14 @@
     "storage"
   ],
   "web_accessible_resources": [
-    "img/*"
+    "img/*",
+    "templates/*"
   ],
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/*"],
       "css": ["collections.css"],
-      "js": ["hashid.js","storage.js","guide.js"],
+      "js": ["hashid.js","storage.js","template.js","common.js","guide.js"],
       "run_at": "document_end"
     },
     {
