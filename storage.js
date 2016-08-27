@@ -37,3 +37,15 @@ storage.remove = function (keys) {
     })
   })
 }
+
+storage.clear = function() {
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.clear(() => {
+      if (chrome.runtime.lastError === undefined) {
+        resolve(true)
+      }else {
+        reject(chrome.runtime.lastError)
+      }
+    })
+  })
+}
