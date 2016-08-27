@@ -1,8 +1,6 @@
 'use strict'
 
 const _guide_element = document.querySelector('#guide')
-const __colections = storage.get('collections')
-const __subscriptions = storage.get('subscriptions')
 const __channels = []
 
 // chrome.tabs.insertCSS(integer tabId, object details, function callback)
@@ -103,7 +101,7 @@ function _initTestDb () {
 
 Promise.all([
   _getSubscriptionsSection(),
-  __colections,
+  __collections,
   __subscriptions
 ]).then(valueArr => {
   var subSection = valueArr[0]
