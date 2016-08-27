@@ -1,7 +1,6 @@
 'use strict'
 
 const _guide_element = document.querySelector('#guide')
-const __channels = []
 
 // chrome.tabs.insertCSS(integer tabId, object details, function callback)
 
@@ -99,11 +98,12 @@ Promise.all([
   var subSection = valueArr[0]
   var collections = valueArr[1].collections
   var subscriptions = valueArr[2].subscriptions
+  var channels = []
 
   subSection.querySelectorAll('#guide-channels > li.guide-channel').forEach(node => {
     let channelId = node.querySelector('a').getAttribute('data-external-id')
       if(subscriptions[channelId] !== undefined) {
-      __channels.push({
+      channels.push({
         id: channelId,
         count: node.querySelector('span.no-count') ? 0 : parseInt(node.querySelector('.guide-count-value').textContent),
         name: node.querySelector('a.guide-item').getAttribute('title'),
@@ -116,11 +116,11 @@ Promise.all([
   var toInject = ''
 
   for (var key in collections) {
-    let channels = __channels.filter(channel => channel.collection === key)
-    channels.forEach(channel => {
+    let filteredChannels = channels.filter(channel => channel.collection === key)
+    filteredChannels.forEach(channel => {
       channel.node.style.display = 'none'
     })
-    toInject += _getHtmlForGuideButton(collections[key].name,channels.reduce((a,c) => a + c.count,0))
+    toInject += _getHtmlForGuideButton(collections[key].name,filteredChannels.reduce((a,c) => a + c.count,0))
   }
 
   document.getElementById('guide-channels').innerHTML = toInject + document.getElementById('guide-channels').innerHTML
