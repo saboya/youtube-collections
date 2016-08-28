@@ -99,4 +99,19 @@ Promise.all([
       node.querySelector('.add-to-collection ul').setAttribute('data-subscription-id',channelId)
     })
   })
+  .then(() => {
+    window.addEventListener('click',e => {
+      if(e.target.matches('ul[data-subscription-id] li button *')) {
+        var collectionId = e.target.closest('li').dataset.collectionId
+        var subscriptionid = e.target.closest('ul').dataset.subscriptionId
+
+        if(collectionId === '') {
+          _removeSubscription(subscriptionid)
+        }
+        else {
+          _addSubscription(subscriptionid,collectionId)
+        }
+      }
+    })
+  })
 })
