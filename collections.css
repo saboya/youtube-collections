@@ -57,9 +57,17 @@
   padding-right: 100px;
 }
 
+.add-to-collection[data-collection-id]:not([data-collection-id=""]) .yt-uix-button-opacity {
+  opacity: 1.0;
+}
+
 .add-to-collection[data-collection-id=""] .collection-label-wrapper::before,
 .popup-item[data-collection-id=""] .collection-label-wrapper::before {
   content: "(none)";
+}
+
+.popup-item[data-collection-id]:not([data-collection-id=""]) button:before {
+  opacity: 1.0;
 }
 
 .popup-item button:before {
