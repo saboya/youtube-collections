@@ -1,17 +1,17 @@
-.collection-item a {
+#guide-collection-list .collection-item > a {
   background: transparent;
 }
 
-.collection-item a:hover {
+#guide-collection-list .collection-item > a:hover {
   background: #cc181e !important;
   color: #fff !important;
 }
 
-.collection-item a:hover .yt-thumb {
+#guide-collection-list .collection-item > a:hover .yt-thumb-20 {
   background-image:url('chrome-extension://__MSG_@@extension_id__/img/collection-icon-white-20.png');
 }
 
-.collection-item .yt-thumb {
+#guide-collection-list .collection-item > a .yt-thumb-20 {
   background-color: transparent;
   background-image:url('chrome-extension://__MSG_@@extension_id__/img/collection-icon-gray-20.png');
 }
