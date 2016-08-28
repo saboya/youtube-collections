@@ -105,3 +105,52 @@ Promise.all([
     }
   })
 })
+.then(() => {
+  chrome.storage.onChanged.addListener((changes,area) => {
+    var postEvent = (type,data) => {
+      window.postMessage(Object.assign(data,{ type: type }), '*')
+    }
+    Object.keys(changes).map(k => {
+      if(changes[k].newValue === undefined) {
+        // Removal events
+        if(k.indexOf('collection') === 0) {
+          postEvent('COLLECTION_REMOVED',{
+            collectionId: k.substring('collection-'.length)
+          })
+        } else if(k.indexOf('subscription') === 0) {
+          postEvent('SUBSCRIPTION_REMOVED',{
+            subscriptionId: k.substring('subscription-'.length),
+            collectionId: changes[k].oldValue
+          })
+        }
+      } else if(changes[k].oldValue === undefined) {
+        // Add events
+        if(k.indexOf('collection') === 0) {
+          postEvent('COLLECTION_ADDED',{
+            collectionId: k.substring('collection-'.length)
+          })
+        } else if(k.indexOf('subscription') === 0) {
+          postEvent('SUBSCRIPTION_ADDED',{
+            subscriptionId: k.substring('subscription-'.length),
+            collectionId: changes[k].newValue
+          })
+        }
+      } else {
+        // Update events
+        if(k.indexOf('collection') === 0) {
+          postEvent('COLLECTION_UPDATED',{
+            collectionId: k.substring('collection-'.length),
+            oldValue: changes[k].oldValue,
+            newValue: changes[k].newValue
+          })
+        } else if(k.indexOf('subscription') === 0) {
+          postEvent('SUBSCRIPTION_UPDATED',{
+            subscriptionId: k.substring('subscription-'.length),
+            oldValue: changes[k].oldValue,
+            newValue: changes[k].newValue
+          })
+        }
+      }
+    })
+  })
+})
