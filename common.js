@@ -1,10 +1,15 @@
 'use strict'
 
-const __collections = storage.get('collections').then(item => {
-  return item.collections
+const __db = storage.get(null)
+const __collections = __db.then(items => {
+  return Object.keys(items).filter(k => k.indexOf('collection-') === 0).map(k => {
+    return { [k.substring('collection-'.length)]: items[k] }
+  }).reduce((collections,collection) => Object.assign(collections,collection),{})
 })
-const __subscriptions = storage.get('subscriptions').then(item => {
-  return item.subscriptions
+const __subscriptions = __db.then(items => {
+  return Object.keys(items).filter(k => k.indexOf('subscription-') === 0).map(k => {
+    return { [k.substring('subscription-'.length)]: items[k] }
+  }).reduce((subscriptions,sub) => Object.assign(subscriptions,sub),{})
 })
 
 function _getGuideSection() {
