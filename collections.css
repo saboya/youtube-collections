@@ -57,6 +57,11 @@
   padding-right: 100px;
 }
 
+.add-to-collection[data-collection-id=""] .collection-label-wrapper::before,
+.popup-item[data-collection-id=""] .collection-label-wrapper::before {
+  content: "(none)";
+}
+
 .popup-item button:before {
   background-image:url('chrome-extension://__MSG_@@extension_id__/img/collection-icon-gray-20.png');
   background-size: auto;

@@ -63,21 +63,20 @@ Promise.all([
   var buttons
 
   Promise.all(
-    [template.render('manager-subscription-popup-item', { id: '(none)', label: '(none)' })].concat(
+    [template.render('manager-subscription-popup-item', { id: '', label: '' })].concat(
     Object.keys(collections).map(k => {
       return template.render('manager-subscription-popup-item', { id: collections[k].id, label: collections[k].name })
     }))
   ).then(valueArr => {
     buttons = valueArr.join('')
-    console.log(buttons)
     return Promise.all(Object.keys(collections).map(k => {
-      return template.render('manager-subscription-button', { label: collections[k].name, buttons: buttons }).then(html => {
+      return template.render('manager-subscription-button', { id: collections[k].id, label: collections[k].name, buttons: buttons }).then(html => {
         return { [collections[k].name]: html }
       })
     }))
   })
   .then(valueArr => {
-    return template.render('manager-subscription-button', { label: '(none)', buttons: buttons }).then(html => {
+    return template.render('manager-subscription-button', { id: '', label: '', buttons: buttons }).then(html => {
       valueArr.push({'(none)':html})
       return valueArr.reduce((all,curr) => Object.assign(all,curr),{})
     })
