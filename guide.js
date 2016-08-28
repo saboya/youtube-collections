@@ -96,8 +96,8 @@ Promise.all([
   __subscriptions
 ]).then(valueArr => {
   var subSection = valueArr[0]
-  var collections = valueArr[1].collections
-  var subscriptions = valueArr[2].subscriptions
+  var collections = valueArr[1]
+  var subscriptions = valueArr[2]
   var channels = []
 
   subSection.querySelectorAll('#guide-channels > li.guide-channel').forEach(node => {
