@@ -85,7 +85,8 @@ Promise.all([
     let query = '#subscription-manager-list tr.subscription-item td:first-of-type .subscription-title-wrap'
     Array.prototype.slice.call(document.querySelectorAll(query))
     .map(node => {
-      var collection = subscriptions[node.closest('tr').dataset.channelExternalId].collection
+      var channelId = node.closest('tr').dataset.channelExternalId
+      var collection = subscriptions[channelId].collection
       var elem = document.createElement('div')
       node.appendChild(elem)
 
@@ -94,6 +95,8 @@ Promise.all([
       } else {
         elem.outerHTML = htmls[collection.name]
       }
+
+      node.querySelector('.add-to-collection ul').setAttribute('data-subscription-id',channelId)
     })
   })
 })
