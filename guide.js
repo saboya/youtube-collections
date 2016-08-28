@@ -1,34 +1,5 @@
 'use strict'
 
-function _initTestDb () {
-  var goodId = HashID.generate()
-  var badId = HashID.generate()
-
-  var subscriptions = {
-    'UCItISwABVRjboRSBBi6WYTA': goodId,
-    'UCeBMccz-PDZf6OB4aV6a3eA': goodId,
-    'UCrZTN5qnHqGhZglG3wUWKng': badId,
-    'UCsQnAt5I56M-qx4OgCoVmeA': badId
-  }
-
-  var collections = {}
-
-  collections[goodId] = {
-    name: 'good'
-  }
-
-  collections[badId] = {
-    name: 'bad'
-  }
-
-  storage.set({
-    'subscriptions': subscriptions,
-    'collections': collections
-  })
-
-  console.log('test db initialized')
-}
-
 Promise.all([
   _getSubscriptionsSection(),
   __collections,
