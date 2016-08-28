@@ -36,6 +36,14 @@ function _removeCollection(id) {
   })
 }
 
+function _addSubscription(subId,collectionId) {
+  return storage.set({ ['subscription-'+subId]: collectionId })
+}
+
+function _removeSubscription(id) {
+  return storage.remove('subscription-'+id)
+}
+
 function _getGuideSection() {
   return document.querySelector('#guide-subscriptions-section')
 }
