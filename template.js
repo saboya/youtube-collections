@@ -5,8 +5,8 @@ const template = {}
 template.load = function (name) {
   return new Promise((resolve,reject) => {
     var xhr = new XMLHttpRequest()
-    xhr.open('GET', chrome.extension.getURL('templates/'+name+'.html'), true)
-    xhr.onreadystatechange = () => { 
+    xhr.open('GET', chrome.extension.getURL('templates/'+name+'.html?random='+HashID.generate()), true)
+    xhr.onreadystatechange = () => {
       if(xhr.readyState == XMLHttpRequest.DONE) {
         if(xhr.status == 200) {
           resolve(xhr.responseText)
