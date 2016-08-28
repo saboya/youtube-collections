@@ -1,7 +1,5 @@
 'use strict'
 
-// chrome.tabs.insertCSS(integer tabId, object details, function callback)
-
 function _initTestDb () {
   var goodId = HashID.generate()
   var badId = HashID.generate()
