@@ -65,12 +65,12 @@ Promise.all([
   Promise.all(
     [template.render('manager-subscription-popup-item', { id: '', label: '' })].concat(
     Object.keys(collections).map(k => {
-      return template.render('manager-subscription-popup-item', { id: collections[k].id, label: collections[k].name })
+      return template.render('manager-subscription-popup-item', { id: k, label: collections[k].name })
     }))
   ).then(valueArr => {
     buttons = valueArr.join('')
     return Promise.all(Object.keys(collections).map(k => {
-      return template.render('manager-subscription-button', { id: collections[k].id, label: collections[k].name, buttons: buttons }).then(html => {
+      return template.render('manager-subscription-button', { id: k, label: collections[k].name, buttons: buttons }).then(html => {
         return { [collections[k].name]: html }
       })
     }))
