@@ -40,7 +40,7 @@ Promise.all([
   var collections = valueArr[1]
   var subscriptions = valueArr[2]
 
-  template.render('guide-section',{title:'Collections'}).then(html => {
+  template.render('guide-section',{ title:'Collections' }).then(html => {
     var node = document.createElement('li')
     _getGuideSection().parentNode.insertBefore(node,_getGuideSection())
     node.outerHTML = html
