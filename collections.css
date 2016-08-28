@@ -15,3 +15,159 @@
   background-color: transparent;
   background-image:url('chrome-extension://__MSG_@@extension_id__/img/collection-icon-gray-20.png');
 }
+
+#collections-manager-container span.collection-add-button {
+  background: no-repeat url(//s.ytimg.com/yts/imgbin/www-hitchhiker-vflYxJH2U.webp) -110px -1377px;
+  width: 14px;
+  height: 14px;
+}
+
+#collection-manager-list .collection-item .yt-thumb-46 {
+  background-color: transparent;
+  background-image:url('chrome-extension://__MSG_@@extension_id__/img/collection-icon-gray-46.png');
+}
+
+#collections-manager-container .subscription-table-header {
+  height: 10px;
+}
+
+#collections-manager-container {
+  padding: 5px 15px 10px;
+  margin: 30px 0;
+}
+
+#collections-manager-container .subscription-title:hover {
+  text-decoration: none;
+}
+
+
+#collections-manager-container input.invalid {
+  background-color: #fee;
+}
+
+/* all copied/replaced down here */
+
+#collections-manager-container .subscription-manager-header {
+    padding: 10px;
+    overflow: hidden;
+    font-size: 16px
+}
+#collections-manager-container .subscription-manager-tabs li {
+    float: left;
+    margin-left: 20px
+}
+#collections-manager-container .subscription-manager-tabs li:first-child {
+    margin-left: 0
+}
+#collections-manager-container table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0
+}
+#collections-manager-container thead {
+    color: #777;
+    font-size: 11px
+}
+#collections-manager-container .subscription-manager-sort-cell {
+    width: 170px;
+    text-align: right;
+    padding-right: 10px
+}
+#collections-manager-container .subscription-options {
+    text-align: right;
+    padding-right: 10px
+}
+#collections-manager-container .subscription-manager-sort-cell .yt-uix-button-content {
+    font-size: 10px;
+    font-weight: 500
+}
+#collections-manager-container .subscription-sort-cell {
+    padding-top: 2px
+}
+#collections-manager-container .subscription-manager-checkbox-cell {
+    width: 130px;
+    text-align: center
+}
+#collections-manager-container .subscription-manager-checkbox-menu-cell {
+    width: 180px;
+    text-align: center
+}
+#collections-manager-container .subscription-manager-checkbox-left-padding {
+    padding-left: 33px;
+    text-align: left
+}
+#collections-manager-container .updates-frequency-menu {
+    margin-left: 5px
+}
+#collections-manager-container .subscription-options {
+    width: 100px
+}
+#collections-manager-container tbody td {
+    padding: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    word-wrap: normal;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis
+}
+#collections-manager-container .subscription-item .subscription-title-container {
+    margin-left: 5px
+}
+#collections-manager-container .subscription-item.nested .subscription-title-container {
+    margin-left: 100px
+}
+#collections-manager-container .subscription-thumb-wrap {
+    float: left
+}
+#collections-manager-container .subscription-title-wrap {
+    padding: 14px 0 0 10px;
+    overflow: hidden
+}
+#collections-manager-container .subscriptions-list {
+    table-layout: fixed
+}
+#collections-manager-container .subscription-title {
+    color: #666;
+    line-height: 18px;
+    font-weight: 500;
+    text-decoration: none
+}
+#collections-manager-container .empty-message {
+    padding: 15px 15px 5px;
+    color: #999;
+    font-size: 13px;
+    margin-top: 10px;
+    border-top: 1px solid #e2e2e2
+}
+#collections-manager-container .subscription-manager-filter-container {
+    float: right
+}
+#collections-manager-container .subscription-manager-title {
+    padding-top: 5px;
+    font-size: 18px;
+    font-weight: 500
+}
+#collections-manager-container .subscription-manager-frequency-menu .hidden {
+    visibility: hidden
+}
+#collections-manager-container .yt-uix-form-input-select {
+    width: 120px
+}
+#collections-manager-container .paid-icon {
+    vertical-align: super;
+    padding-left: 4px
+}
+#collections-manager-container .qualified-channel-title.ellipsized {
+    width: inherit
+}
+#collections-manager-container .bulkactions-select-button {
+    display: none
+}
+#collections-manager-container .bulkactions-actions-button {
+    margin-left: 50px
+}
+#collections-manager-container .wrong-account-alert {
+    font-size: 16px;
+    font-weight: 500
+}
+
