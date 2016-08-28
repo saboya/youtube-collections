@@ -60,8 +60,8 @@
 .popup-item button:before {
   background-image:url('chrome-extension://__MSG_@@extension_id__/img/collection-icon-gray-20.png');
   background-size: auto;
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
 }
 
 #collections-manager-container .add-to-collection-button:before,
