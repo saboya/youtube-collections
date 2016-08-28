@@ -4,6 +4,10 @@ const _guide_element = document.querySelector('#guide')
 
 // chrome.tabs.insertCSS(integer tabId, object details, function callback)
 
+function _getGuideSection() {
+  return document.querySelector('#guide-subscriptions-section')
+}
+
 function _getHtmlForGuideButton (title,count) {
   return '<li class="guide-channel collection-item guide-notification-item overflowable-list-item" role="menuitem">\
   <a class="guide-item yt-uix-sessionlink yt-valign spf-link" href="#" title="'+title+'">\
@@ -30,10 +34,6 @@ function _getHtmlForGuideButton (title,count) {
 
 function _getSubscriptionsSection () {
   return new Promise((resolve, reject) => {
-    var _getGuideSection = () => {
-      return document.querySelector('#guide-subscriptions-section')
-    }
-
     if (_getGuideSection() !== null) {
       resolve(_getGuideSection())
     } else {
@@ -113,15 +113,21 @@ Promise.all([
     }
   })
 
-  var toInject = ''
-
-  for (var key in collections) {
-    let filteredChannels = channels.filter(channel => channel.collection === key)
-    filteredChannels.forEach(channel => {
-      channel.node.style.display = 'none'
+  template.render('guide-section',{title:'Collections'}).then(html => {
+    var node = document.createElement('li')
+    _getGuideSection().parentNode.insertBefore(node,_getGuideSection())
+    node.outerHTML = html
+    return document.querySelector('#guide-collection-list .guide-channels-list')
+  }).then(node => {
+    return Object.keys(collections).map(id => {
+      return template.render('guide-section-item',{
+        name: collections[id].name,
+        count: channels.filter(channel => channel.collection === id).reduce((a,c) => a + c.count,0)
+      }).then(html => {
+        var elem = document.createElement('li')
+        node.appendChild(elem)
+        elem.outerHTML = html
+      })
     })
-    toInject += _getHtmlForGuideButton(collections[key].name,filteredChannels.reduce((a,c) => a + c.count,0))
-  }
-
-  document.getElementById('guide-channels').innerHTML = toInject + document.getElementById('guide-channels').innerHTML
+  })
 })
