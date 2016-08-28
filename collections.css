@@ -40,9 +40,36 @@
   text-decoration: none;
 }
 
-
 #collections-manager-container input.invalid {
   background-color: #fee;
+}
+
+
+#collections-manager-container .yt-uix-button-opacity:hover,
+#subscription-manager-container .yt-uix-button-opacity:hover {
+  opacity: 1.0;
+}
+
+#subscription-manager-container .add-to-collection {
+  float: right;
+  margin-top: -7px;
+  width: 200px;
+  padding-right: 100px;
+}
+
+.popup-item button:before {
+  background-image:url('chrome-extension://__MSG_@@extension_id__/img/collection-icon-gray-20.png');
+  background-size: auto;
+  width: 16px;
+  height: 16px;
+}
+
+#collections-manager-container .add-to-collection-button:before,
+#subscription-manager-container .add-to-collection-button:before {
+  background-image:url('chrome-extension://__MSG_@@extension_id__/img/collection-icon-gray-20.png');
+  background-size: auto;
+  width: 20px;
+  height: 20px;
 }
 
 /* all copied/replaced down here */

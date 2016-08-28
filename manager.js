@@ -1,9 +1,5 @@
 'use strict'
 
-document.querySelectorAll('#subscription-manager-list tr.subscription-item').forEach(element => {
-  console.log(element.getAttribute('data-subscription-id'))
-})
-
 function _getSubscriptionContainer() {
   return document.getElementById('subscription-manager-container')
 }
@@ -61,6 +57,44 @@ Promise.all([
         elem.outerHTML = html
         return document.getElementById(id+'-manager-collection')
       })
+    })
+  })
+
+  var buttons
+
+  Promise.all(
+    [template.render('manager-subscription-popup-item', { id: '(none)', label: '(none)' })].concat(
+    Object.keys(collections).map(k => {
+      return template.render('manager-subscription-popup-item', { id: collections[k].id, label: collections[k].name })
+    }))
+  ).then(valueArr => {
+    buttons = valueArr.join('')
+    console.log(buttons)
+    return Promise.all(Object.keys(collections).map(k => {
+      return template.render('manager-subscription-button', { label: collections[k].name, buttons: buttons }).then(html => {
+        return { [collections[k].name]: html }
+      })
+    }))
+  })
+  .then(valueArr => {
+    return template.render('manager-subscription-button', { label: '(none)', buttons: buttons }).then(html => {
+      valueArr.push({'(none)':html})
+      return valueArr.reduce((all,curr) => Object.assign(all,curr),{})
+    })
+  })
+  .then(htmls => {
+    let query = '#subscription-manager-list tr.subscription-item td:first-of-type .subscription-title-wrap'
+    Array.prototype.slice.call(document.querySelectorAll(query))
+    .map(node => {
+      var collection = subscriptions[node.closest('tr').dataset.channelExternalId].collection
+      var elem = document.createElement('div')
+      node.appendChild(elem)
+
+      if(collection === null) {
+        elem.outerHTML = htmls['(none)']
+      } else {
+        elem.outerHTML = htmls[collection.name]
+      }
     })
   })
 })
