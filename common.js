@@ -12,6 +12,26 @@ const __subscriptions = __db.then(items => {
   }).reduce((subscriptions,sub) => Object.assign(subscriptions,sub),{})
 })
 
+function _addCollection(name) {
+  __collections.then(collections => {
+    var newId = HashID.generate()
+    
+    while(collections[newId] !== undefined) {
+      newId = HashID.generate()
+    }
+
+    return storage.set({
+      ['collection-'+newId]: {
+        name: name
+      }
+    })
+  })
+}
+
+function _removeCollection(id) {
+  return storage.remove('collection-'+id)
+}
+
 function _getGuideSection() {
   return document.querySelector('#guide-subscriptions-section')
 }
