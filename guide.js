@@ -18,7 +18,7 @@ Promise.all([
     return Object.keys(collections).map(id => {
       return template.render('guide-section-item',{
         name: collections[id].name,
-        count: collections[id].count
+        count: collections[id].count || ''
       }).then(html => {
         var elem = document.createElement('li')
         node.appendChild(elem)
