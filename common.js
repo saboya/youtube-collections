@@ -29,7 +29,11 @@ function _addCollection(name) {
 }
 
 function _removeCollection(id) {
-  return storage.remove('collection-'+id)
+  return __subscriptions.then(s => {
+    return storage.remove(
+      Object.keys(s).filter(k => s[k].collectionId === id).map(k => 'subscription-'+k).concat('collection-'+id)
+    )
+  })
 }
 
 function _getGuideSection() {
@@ -81,6 +85,7 @@ Promise.all([
       id: channelId,
       count: node.querySelector('span.no-count') ? 0 : parseInt(node.querySelector('.guide-count-value').textContent),
       name: node.querySelector('a.guide-item').getAttribute('title'),
+      collectionId: subscriptions[channelId] || null,
       collection: subscriptions[channelId] !== undefined ? collections[subscriptions[channelId]] : null
     }
 
