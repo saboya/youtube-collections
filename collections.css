@@ -2,11 +2,23 @@
   background: transparent;
 }
 
+#guide-collection-list .collection-item.collection-list-open .guide-collection-channel-list {
+}
+
+#guide-collection-list .collection-item {
+  max-height: 28px;
+  transition: max-height 0.15s ease-in-out 0s;
+}
+
+#guide-collection-list .collection-item.collection-list-open > a > .guide-count,
+#guide-collection-list .collection-item.collection-list-open > .guide-item,
+#guide-collection-list .collection-item.collection-list-open > a,
 #guide-collection-list .collection-item > a:hover {
   background: #cc181e !important;
   color: #fff !important;
 }
 
+#guide-collection-list .collection-item.collection-list-open > a .yt-thumb-20,
 #guide-collection-list .collection-item > a:hover .yt-thumb-20 {
   background-image:url('chrome-extension://__MSG_@@extension_id__/img/collection-icon-white-20.png');
 }
@@ -66,19 +78,19 @@
   content: "(none)";
 }
 
-.popup-item[data-collection-id]:not([data-collection-id=""]) button:before {
-  opacity: 1.0;
-}
-
-.popup-item button:before {
+#collections-manager-container .add-to-collection-button:before,
+#subscription-manager-container .add-to-collection-button:before {
   background-image:url('chrome-extension://__MSG_@@extension_id__/img/collection-icon-gray-20.png');
   background-size: auto;
   width: 20px;
   height: 20px;
 }
 
-#collections-manager-container .add-to-collection-button:before,
-#subscription-manager-container .add-to-collection-button:before {
+.popup-item[data-collection-id]:not([data-collection-id=""]) button:before {
+  opacity: 1.0;
+}
+
+.popup-item button:before {
   background-image:url('chrome-extension://__MSG_@@extension_id__/img/collection-icon-gray-20.png');
   background-size: auto;
   width: 20px;
