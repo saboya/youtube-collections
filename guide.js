@@ -1,13 +1,11 @@
 'use strict'
 
 Promise.all([
-  _getSubscriptionsSection(),
   _getCollections(),
   _getSubscriptions()
 ]).then(valueArr => {
-  var subSection = valueArr[0]
-  var collections = valueArr[1]
-  var subscriptions = valueArr[2]
+  var collections = valueArr[0]
+  var subscriptions = valueArr[1]
 
   var _getSubscriptionCount = function(id) {
     var guideItem = document.getElementById(id+'-guide-item')
