@@ -23,5 +23,6 @@ Collections are saved on Google's servers, so it will syncrhonize with other pla
 - [x] Add and remove collections
 - [x] Add and remove subscriptions to/from collections
 - [x] Dynamically update collections and subscriptions when changes are made
+- [ ] Rename collections
 - [ ] Order collections arbitrarly (it's alphabetical for now)
 - [ ] Drag-and-drop UI
