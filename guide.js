@@ -43,7 +43,7 @@ Promise.all([
       return template.render('guide-section-item',{
         id: id,
         name: collections[id].name,
-        count: _getCollectionCount(id)
+        count: function(count) { return count === 0 ? '':count; }(_getCollectionCount(id))
       }).then(html => {
         var elem = document.createElement('li')
         node.appendChild(elem)
