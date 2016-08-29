@@ -4,7 +4,12 @@ function _getCollections() {
   return storage.get(null).then(items => {
     return Object.keys(items).filter(k => k.indexOf('collection-') === 0).map(k => {
       return { [k.substring('collection-'.length)]: items[k] }
-    }).reduce((collections,collection) => Object.assign(collections,collection),{})
+    }).sort((a,b) => {
+      var id1 = Object.keys(a)[0]
+      var id2 = Object.keys(b)[0]
+      return (a[id1].name<b[id2].name?-1:(a[id1].name>b[id2].name?1:0))
+    })
+    .reduce((collections,collection) => Object.assign(collections,collection),{})
   })
 }
 
