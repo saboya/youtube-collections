@@ -1,9 +1,54 @@
 'use strict'
 
+var PREFIX
+
+const __prefix_promise = new Promise((resolve,reject) => {
+  function getLikePlaylistElement() {
+    return document.querySelector('#guide-container .guide-likes-playlist-icon')
+  }
+
+  function endPromise() {
+    if(getLikePlaylistElement() === null) {
+      reject('No like playlist id found')
+    }
+    else {
+      resolve(getLikePlaylistElement().closest('a')
+        .getAttribute('href').split('=').pop())
+    }
+  }
+
+  if (_getGuideSection() !== null) {
+    endPromise()
+  } else {
+    var _guide_element = document.querySelector('#guide')
+    var observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.type === 'childList' && mutation.target === _guide_element) {
+          observer.disconnect()
+          observer.takeRecords()
+          endPromise()
+        }
+      })
+    })
+
+    observer.observe(_guide_element, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      characterData: true
+    })
+  }
+})
+
+__prefix_promise.then(prefix => {
+  PREFIX = prefix
+})
+
 function _getCollections() {
+  return __prefix_promise.then(prefix => {
   return storage.get(null).then(items => {
-    return Object.keys(items).filter(k => k.indexOf('collection-') === 0).map(k => {
-      return { [k.substring('collection-'.length)]: items[k] }
+    return Object.keys(items).filter(k => k.indexOf('collection-'+PREFIX) === 0).map(k => {
+      return { [k.substring(('collection-'+PREFIX+'-').length)]: items[k] }
     }).sort((a,b) => {
       var id1 = Object.keys(a)[0]
       var id2 = Object.keys(b)[0]
@@ -11,13 +56,16 @@ function _getCollections() {
     })
     .reduce((collections,collection) => Object.assign(collections,collection),{})
   })
+  })
 }
 
 function _getSubscriptions() {
+  return __prefix_promise.then(prefix => {
   return storage.get(null).then(items => {
-    return Object.keys(items).filter(k => k.indexOf('subscription-') === 0).map(k => {
-      return { [k.substring('subscription-'.length)]: items[k] }
+    return Object.keys(items).filter(k => k.indexOf('subscription-'+PREFIX) === 0).map(k => {
+      return { [k.substring(('subscription-'+PREFIX+'-').length)]: items[k] }
     }).reduce((subscriptions,sub) => Object.assign(subscriptions,sub),{})
+  })
   })
 }
 
@@ -30,7 +78,7 @@ function _addCollection(name) {
     }
 
     return storage.set({
-      ['collection-'+newId]: {
+      ['collection-'+PREFIX+'-'+newId]: {
         name: name
       }
     })
@@ -40,51 +88,23 @@ function _addCollection(name) {
 function _removeCollection(id) {
   return _getSubscriptions().then(s => {
     return storage.remove(
-      Object.keys(s).filter(k => s[k] === id).map(k => 'subscription-'+k).concat('collection-'+id)
+      Object.keys(s).filter(k => s[k] === id).map(k => {
+        return 'subscription-'+PREFIX+'-'+k
+      }).concat('collection-'+PREFIX+'-'+id)
     )
   })
 }
 
 function _addSubscription(subId,collectionId) {
-  return storage.set({ ['subscription-'+subId]: collectionId })
+  return storage.set({ ['subscription-'+PREFIX+'-'+subId]: collectionId })
 }
 
 function _removeSubscription(id) {
-  return storage.remove('subscription-'+id)
+  return storage.remove('subscription-'+PREFIX+'-'+id)
 }
 
 function _getGuideSection() {
   return document.querySelector('#guide-subscriptions-section')
-}
-
-function _getSubscriptionsSection () {
-  var _guide_element = document.querySelector('#guide')
-  return new Promise((resolve, reject) => {
-    if (_getGuideSection() !== null) {
-      resolve(_getGuideSection())
-    } else {
-      var observer = new MutationObserver(mutations => {
-        mutations.forEach(mutation => {
-          if (mutation.type === 'childList' && mutation.target === _guide_element) {
-            observer.disconnect()
-            observer.takeRecords()
-            if (_getGuideSection() !== null) {
-              resolve(_getGuideSection())
-            } else {
-              reject('Subscriptions not found in Guide')
-            }
-          }
-        })
-      })
-
-      observer.observe(_guide_element, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        characterData: true
-      })
-    }
-  })
 }
 
 chrome.storage.onChanged.addListener((changes,area) => {
@@ -96,12 +116,12 @@ chrome.storage.onChanged.addListener((changes,area) => {
       // Removal events
       if(k.indexOf('collection') === 0) {
         postEvent('COLLECTION_REMOVED',{
-          id: k.substring('collection-'.length),
+          id: k.substring(('collection-'+PREFIX+'-').length),
           name: changes[k].oldValue.name
         })
       } else if(k.indexOf('subscription') === 0) {
         postEvent('SUBSCRIPTION_REMOVED',{
-          subscriptionId: k.substring('subscription-'.length),
+          subscriptionId: k.substring(('subscription-'+PREFIX+'-').length),
           collectionId: changes[k].oldValue
         })
       }
@@ -109,12 +129,12 @@ chrome.storage.onChanged.addListener((changes,area) => {
       // Add events
       if(k.indexOf('collection') === 0) {
         postEvent('COLLECTION_ADDED',{
-          id: k.substring('collection-'.length),
+          id: k.substring(('collection-'+PREFIX+'-').length),
           name: changes[k].newValue.name
         })
       } else if(k.indexOf('subscription') === 0) {
         postEvent('SUBSCRIPTION_ADDED',{
-          subscriptionId: k.substring('subscription-'.length),
+          subscriptionId: k.substring(('subscription-'+PREFIX+'-').length),
           collectionId: changes[k].newValue
         })
       }
@@ -122,13 +142,13 @@ chrome.storage.onChanged.addListener((changes,area) => {
       // Update events
       if(k.indexOf('collection') === 0) {
         postEvent('COLLECTION_UPDATED',{
-          collectionId: k.substring('collection-'.length),
+          collectionId: k.substring(('collection-'+PREFIX+'-').length),
           oldValue: changes[k].oldValue,
           newValue: changes[k].newValue
         })
       } else if(k.indexOf('subscription') === 0) {
         postEvent('SUBSCRIPTION_UPDATED',{
-          subscriptionId: k.substring('subscription-'.length),
+          subscriptionId: k.substring(('subscription-'+PREFIX+'-').length),
           oldValue: changes[k].oldValue,
           newValue: changes[k].newValue
         })
