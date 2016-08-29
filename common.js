@@ -1,9 +1,14 @@
 'use strict'
 
+function _getAccountChannelId() {
+  return document.querySelector('#guide-container .guide-my-channel-icon')
+    .closest('a').getAttribute('href').split('/').pop()
+}
+
 function _getCollections() {
   return storage.get(null).then(items => {
-    return Object.keys(items).filter(k => k.indexOf('collection-') === 0).map(k => {
-      return { [k.substring('collection-'.length)]: items[k] }
+    return Object.keys(items).filter(k => k.indexOf('collection-'+_getAccountChannelId()) === 0).map(k => {
+      return { [k.substring(('collection-'+_getAccountChannelId()+'-').length)]: items[k] }
     }).sort((a,b) => {
       var id1 = Object.keys(a)[0]
       var id2 = Object.keys(b)[0]
@@ -15,14 +20,15 @@ function _getCollections() {
 
 function _getSubscriptions() {
   return storage.get(null).then(items => {
-    return Object.keys(items).filter(k => k.indexOf('subscription-') === 0).map(k => {
-      return { [k.substring('subscription-'.length)]: items[k] }
+    return Object.keys(items).filter(k => k.indexOf('subscription-'+_getAccountChannelId()) === 0).map(k => {
+      return { [k.substring(('subscription-'+_getAccountChannelId()+'-').length)]: items[k] }
     }).reduce((subscriptions,sub) => Object.assign(subscriptions,sub),{})
   })
 }
 
 function _addCollection(name) {
   _getCollections().then(collections => {
+    console.log(collections)
     var newId = HashID.generate()
     
     while(collections[newId] !== undefined) {
@@ -30,7 +36,7 @@ function _addCollection(name) {
     }
 
     return storage.set({
-      ['collection-'+newId]: {
+      ['collection-'+_getAccountChannelId()+'-'+newId]: {
         name: name
       }
     })
@@ -40,17 +46,19 @@ function _addCollection(name) {
 function _removeCollection(id) {
   return _getSubscriptions().then(s => {
     return storage.remove(
-      Object.keys(s).filter(k => s[k] === id).map(k => 'subscription-'+k).concat('collection-'+id)
+      Object.keys(s).filter(k => s[k] === id).map(k => {
+        'subscription-'+_getAccountChannelId()+'-'+k
+      }).concat('collection-'+_getAccountChannelId()+'-'+id)
     )
   })
 }
 
 function _addSubscription(subId,collectionId) {
-  return storage.set({ ['subscription-'+subId]: collectionId })
+  return storage.set({ ['subscription-'+_getAccountChannelId()+'-'+subId]: collectionId })
 }
 
 function _removeSubscription(id) {
-  return storage.remove('subscription-'+id)
+  return storage.remove('subscription-'+_getAccountChannelId()+'-'+id)
 }
 
 function _getGuideSection() {
@@ -96,12 +104,12 @@ chrome.storage.onChanged.addListener((changes,area) => {
       // Removal events
       if(k.indexOf('collection') === 0) {
         postEvent('COLLECTION_REMOVED',{
-          id: k.substring('collection-'.length),
+          id: k.substring(('collection-'+_getAccountChannelId()+'-').length),
           name: changes[k].oldValue.name
         })
       } else if(k.indexOf('subscription') === 0) {
         postEvent('SUBSCRIPTION_REMOVED',{
-          subscriptionId: k.substring('subscription-'.length),
+          subscriptionId: k.substring(('subscription-'+_getAccountChannelId()+'-').length),
           collectionId: changes[k].oldValue
         })
       }
@@ -109,12 +117,12 @@ chrome.storage.onChanged.addListener((changes,area) => {
       // Add events
       if(k.indexOf('collection') === 0) {
         postEvent('COLLECTION_ADDED',{
-          id: k.substring('collection-'.length),
+          id: k.substring(('collection-'+_getAccountChannelId()+'-').length),
           name: changes[k].newValue.name
         })
       } else if(k.indexOf('subscription') === 0) {
         postEvent('SUBSCRIPTION_ADDED',{
-          subscriptionId: k.substring('subscription-'.length),
+          subscriptionId: k.substring(('subscription-'+_getAccountChannelId()+'-').length),
           collectionId: changes[k].newValue
         })
       }
@@ -122,13 +130,13 @@ chrome.storage.onChanged.addListener((changes,area) => {
       // Update events
       if(k.indexOf('collection') === 0) {
         postEvent('COLLECTION_UPDATED',{
-          collectionId: k.substring('collection-'.length),
+          collectionId: k.substring(('collection-'+_getAccountChannelId()+'-').length),
           oldValue: changes[k].oldValue,
           newValue: changes[k].newValue
         })
       } else if(k.indexOf('subscription') === 0) {
         postEvent('SUBSCRIPTION_UPDATED',{
-          subscriptionId: k.substring('subscription-'.length),
+          subscriptionId: k.substring(('subscription-'+_getAccountChannelId()+'-').length),
           oldValue: changes[k].oldValue,
           newValue: changes[k].newValue
         })
