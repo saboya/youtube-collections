@@ -22,7 +22,7 @@ function _getSubscriptions() {
 }
 
 function _addCollection(name) {
-  _getCollections().then(collections => {
+  return _getCollections().then(collections => {
     var newId = HashID.generate()
     
     while(collections[newId] !== undefined) {
