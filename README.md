@@ -10,7 +10,7 @@ Collections are saved on Google's servers, so it will syncrhonize with other pla
 
 ## Features / To-do list
 
-## General
+### General
 - [ ] i18n
 
 ### YouTube Menu
