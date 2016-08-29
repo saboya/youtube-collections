@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "Youtube Collections",
-  "short:name": "ytcollection",
+  "short_name": "ytcollection",
   "description": "Collections for Youtube. You know, like we used to have until it was removed for no reason.",
   "version": "0.2",
   "icons": {
