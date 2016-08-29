@@ -101,7 +101,7 @@ Promise.all([
   })
   .then(() => {
     window.addEventListener('click',e => {
-      if(e.target.matches('ul[data-subscription-id] li button *')) {
+      if(e.target.matches('ul[data-subscription-id] li button, ul[data-subscription-id] li button *')) {
         var collectionId = e.target.closest('li').dataset.collectionId
         var subscriptionid = e.target.closest('ul').dataset.subscriptionId
 
