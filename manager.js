@@ -14,6 +14,18 @@ function _generatePopupOptions() {
   })
 }
 
+function _refreshGlobalPopupOptions() {
+  return _generatePopupOptions().then(html => {
+    var hiddenOpts = document.getElementById('collections-popup-options')
+    if(hiddenOpts === null) {
+      var hiddenOpts = document.createElement('ul')
+      document.body.appendChild(hiddenOpts)
+    }
+    hiddenOpts.outerHTML = '<ul id="collections-popup-options" style="display:none">'+html+'</ul>'
+    return hiddenOpts
+  })
+}
+
 Promise.all([
   _getCollections(),
   _getSubscriptions()
@@ -74,21 +86,31 @@ Promise.all([
     })
   })
 
-  _generatePopupOptions().then(buttonsHtml => {
-    return Promise.all(
-      Object.keys(collections).map(k => {
-        return template.render('manager-subscription-button', { id: k, label: collections[k].name, buttons: buttonsHtml })
-        .then(html => {
-          return { [collections[k].name]: html }
-        })
-      }).concat(template.render('manager-subscription-button', { id: '', label: '', buttons: buttonsHtml })
-        .then(html => {
-          return { '(none)': html }
-        })
-      )
-    ).then(arr => {
-      return arr.reduce((p,c) => Object.assign(p,c),{})
+  _refreshGlobalPopupOptions().then(hiddenOpts => {
+    document.getElementById('subscription-manager-list').addEventListener('click',e => {
+      if(e.target.matches('.add-to-collection, .add-to-collection *')) {
+        var buttonList = e.target.closest('.add-to-collection').querySelector('ul')
+        if(buttonList) {
+          buttonList.innerHTML = document.getElementById('collections-popup-options').innerHTML
+        }
+      }
     })
+  })
+
+  Promise.all(
+    Object.keys(collections).map(k => {
+      return template.render('manager-subscription-button', { id: k, label: collections[k].name })
+      .then(html => {
+        return { [collections[k].name]: html }
+      })
+    }).concat(template.render('manager-subscription-button', { id: '', label: '' })
+      .then(html => {
+        return { '(none)': html }
+      })
+    )
+  )
+  .then(arr => {
+    return arr.reduce((p,c) => Object.assign(p,c),{})
   })
   .then(htmls => {
     let query = '#subscription-manager-list tr.subscription-item td:first-of-type .subscription-title-wrap'
@@ -162,12 +184,16 @@ window.addEventListener('message',event => {
             document.querySelector('#collection-manager-list tbody').appendChild(elem)
             elem.outerHTML = html
           })
+          _refreshGlobalPopupOptions()
           break;
         case 'COLLECTION_REMOVED':
           document.getElementById(event.data.id+'-manager-collection').remove()
+          _refreshGlobalPopupOptions()
+          break;
+        case 'COLLECTION_UPDATED':
+          _refreshGlobalPopupOptions()
           break;
       }
     })
   }
 });
-
