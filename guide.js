@@ -53,7 +53,10 @@ Promise.all([
           var newNode = document.getElementById(key+'-guide-item').cloneNode(true)
           newNode.removeAttribute('id')
           var thumb = newNode.querySelector('img')
-          thumb.setAttribute('src',thumb.dataset.thumb)
+          var imgSrc = thumb.dataset.thumb
+          if(imgSrc !== undefined) {
+            thumb.setAttribute('src',thumb.dataset.thumb)
+          }
 
           document.getElementById(id+'-guide-channel-list').appendChild(newNode)
         })
