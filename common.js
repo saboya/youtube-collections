@@ -1,8 +1,8 @@
 'use strict'
 
 function _getAccountChannelId() {
-  return document.querySelector('#guide-container .guide-my-channel-icon')
-    .closest('a').getAttribute('href').split('/').pop()
+  return document.querySelector('#guide-container .guide-likes-playlist-icon')
+    .closest('a').getAttribute('href').split('=').pop()
 }
 
 function _getCollections() {
