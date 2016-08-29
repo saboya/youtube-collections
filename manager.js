@@ -1,9 +1,5 @@
 'use strict'
 
-function _getSubscriptionContainer() {
-  return document.getElementById('subscription-manager-container')
-}
-
 Promise.all([
   _getCollections(),
   _getSubscriptions()
@@ -12,6 +8,10 @@ Promise.all([
   var subscriptions = valueArr[1]
 
   template.render('manager-section',{ quantity: Object.keys(collections).length }).then(html => {
+    var _getSubscriptionContainer = function() {
+      return document.getElementById('subscription-manager-container')
+    }
+
     var elem = document.createElement('div')
     _getSubscriptionContainer().parentNode.insertBefore(elem,_getSubscriptionContainer())
     elem.outerHTML = html
