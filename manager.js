@@ -64,7 +64,10 @@ Promise.all([
     })
 
     form.addEventListener('submit',e => {
-      _addCollection(form.querySelector('input[name="add-collection"]').value)
+      _addCollection(e.target.elements['add-collection'].value)
+      .then(result => {
+        e.target.elements['add-collection'].value = ''
+      })
 
       e.preventDefault()
       e.stopPropagation()

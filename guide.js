@@ -15,8 +15,15 @@ Promise.all([
   }
 
   var _getCollectionCount = function(id) {
-    return Object.keys(subscriptions).filter(k => subscriptions[k] == id)
+    return Object.keys(subscriptions).filter(k => {
+        return (_getSubscriptionGuideItem(k) !== null)
+          && (subscriptions[k] == id)
+      })
       .map(k => _getSubscriptionCount(k)).reduce((p,c) => p+c,0)
+  }
+
+  var _getSubscriptionGuideItem = function(id) {
+    return document.getElementById(id+'-guide-item')
   }
 
   template.render('guide-section',{ title:'Collections' }).then(html => {
@@ -49,8 +56,11 @@ Promise.all([
         node.appendChild(elem)
         elem.outerHTML = html
 
-        Object.keys(subscriptions).filter(key => subscriptions[key] === id).forEach(key => {
-          var newNode = document.getElementById(key+'-guide-item').cloneNode(true)
+        Object.keys(subscriptions).filter(key => {
+          return (_getSubscriptionGuideItem(key) !== null) &&
+            (subscriptions[key] === id)
+        }).forEach(key => {
+          var newNode = _getSubscriptionGuideItem(key).cloneNode(true)
           newNode.removeAttribute('id')
           var thumb = newNode.querySelector('img')
           var imgSrc = thumb.dataset.thumb
