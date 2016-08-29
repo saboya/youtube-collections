@@ -115,7 +115,8 @@ Promise.all([
         // Removal events
         if(k.indexOf('collection') === 0) {
           postEvent('COLLECTION_REMOVED',{
-            collectionId: k.substring('collection-'.length)
+            id: k.substring('collection-'.length),
+            name: changes[k].oldValue.name
           })
         } else if(k.indexOf('subscription') === 0) {
           postEvent('SUBSCRIPTION_REMOVED',{
@@ -127,7 +128,8 @@ Promise.all([
         // Add events
         if(k.indexOf('collection') === 0) {
           postEvent('COLLECTION_ADDED',{
-            collectionId: k.substring('collection-'.length)
+            id: k.substring('collection-'.length),
+            name: changes[k].newValue.name
           })
         } else if(k.indexOf('subscription') === 0) {
           postEvent('SUBSCRIPTION_ADDED',{
