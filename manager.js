@@ -146,8 +146,17 @@ __collections.then(collections => {
           _setButtonCollectionId(event.data.subscriptionId,event.data.newValue)
           break;
         case 'COLLECTION_ADDED':
+          template.render('manager-section-item',{
+            id: event.data.id,
+            name: event.data.name
+          }).then(html => {
+            var elem = document.createElement('tr')
+            document.querySelector('#collection-manager-list tbody').appendChild(elem)
+            elem.outerHTML = html
+          })
           break;
         case 'COLLECTION_REMOVED':
+          document.getElementById(event.data.id+'-manager-collection').remove()
           break;
       }
     }
