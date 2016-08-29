@@ -125,48 +125,49 @@ Promise.all([
   })
 })
 
-window.addEventListener('message',e => {
+window.addEventListener('message',event => {
   if (event.source != window) {
     return
   }
 
-  var collections = _getCollections()
-
-  var _getAddSubscriptionButton = function(subId) {
-    return document.querySelector('#subscription-manager-list\
-      tr[data-channel-external-id="'+subId+'"] .add-to-collection')
-  }
-
-  var _setButtonCollectionId = function(subId,collectionId) {
-    _getAddSubscriptionButton(subId).setAttribute('data-collection-id',collectionId)
-    var label = collectionId === '' ? '' : collections[collectionId].name
-    _getAddSubscriptionButton(subId).querySelector('.collection-label-wrapper').textContent = label
-  }
-
   if (event.data.type) {
-    switch(event.data.type) {
-      case 'SUBSCRIPTION_ADDED':
-        _setButtonCollectionId(event.data.subscriptionId,event.data.collectionId)
-        break;
-      case 'SUBSCRIPTION_REMOVED':
-        _setButtonCollectionId(event.data.subscriptionId,'')
-        break;
-      case 'SUBSCRIPTION_UPDATED':
-        _setButtonCollectionId(event.data.subscriptionId,event.data.newValue)
-        break;
-      case 'COLLECTION_ADDED':
-        template.render('manager-section-item',{
-          id: event.data.id,
-          name: event.data.name
-        }).then(html => {
-          var elem = document.createElement('tr')
-          document.querySelector('#collection-manager-list tbody').appendChild(elem)
-          elem.outerHTML = html
-        })
-        break;
-      case 'COLLECTION_REMOVED':
-        document.getElementById(event.data.id+'-manager-collection').remove()
-        break;
-    }
+    _getCollections().then(collections => {
+      var _getAddSubscriptionButton = function(subId) {
+        return document.querySelector('#subscription-manager-list\
+          tr[data-channel-external-id="'+subId+'"] .add-to-collection')
+      }
+
+      var _setButtonCollectionId = function(subId,collectionId) {
+        _getAddSubscriptionButton(subId).setAttribute('data-collection-id',collectionId)
+        var label = collectionId === '' ? '' : collections[collectionId].name
+        _getAddSubscriptionButton(subId).querySelector('.collection-label-wrapper').textContent = label
+      }
+
+      switch(event.data.type) {
+        case 'SUBSCRIPTION_ADDED':
+          _setButtonCollectionId(event.data.subscriptionId,event.data.collectionId)
+          break;
+        case 'SUBSCRIPTION_REMOVED':
+          _setButtonCollectionId(event.data.subscriptionId,'')
+          break;
+        case 'SUBSCRIPTION_UPDATED':
+          _setButtonCollectionId(event.data.subscriptionId,event.data.newValue)
+          break;
+        case 'COLLECTION_ADDED':
+          template.render('manager-section-item',{
+            id: event.data.id,
+            name: event.data.name
+          }).then(html => {
+            var elem = document.createElement('tr')
+            document.querySelector('#collection-manager-list tbody').appendChild(elem)
+            elem.outerHTML = html
+          })
+          break;
+        case 'COLLECTION_REMOVED':
+          document.getElementById(event.data.id+'-manager-collection').remove()
+          break;
+      }
+    })
   }
-})
+});
+
