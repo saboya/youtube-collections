@@ -2,12 +2,22 @@
 
 Promise.all([
   _getSubscriptionsSection(),
-  __collections,
-  __subscriptions
+  _getCollections(),
+  _getSubscriptions()
 ]).then(valueArr => {
   var subSection = valueArr[0]
   var collections = valueArr[1]
   var subscriptions = valueArr[2]
+
+  var _getSubscriptionCount = function(id) {
+    var guideItem = document.getElementById(id+'-guide-item')
+    return guideItem.querySelector('span.no-count') ? 0 : parseInt(guideItem.querySelector('.guide-count-value').textContent)
+  }
+
+  var _getCollectionCount = function(id) {
+    return Object.keys(subscriptions).filter(k => subscriptions[k] == id)
+      .map(k => _getSubscriptionCount(k)).reduce((p,c) => p+c,0)
+  }
 
   template.render('guide-section',{ title:'Collections' }).then(html => {
     var node = document.createElement('li')
@@ -33,13 +43,13 @@ Promise.all([
       return template.render('guide-section-item',{
         id: id,
         name: collections[id].name,
-        count: collections[id].count || ''
+        count: _getCollectionCount(id)
       }).then(html => {
         var elem = document.createElement('li')
         node.appendChild(elem)
         elem.outerHTML = html
 
-        Object.keys(subscriptions).filter(key => subscriptions[key].collectionId === id).forEach(key => {
+        Object.keys(subscriptions).filter(key => subscriptions[key] === id).forEach(key => {
           var newNode = document.getElementById(key+'-guide-item').cloneNode(true)
           newNode.removeAttribute('id')
           var thumb = newNode.querySelector('img')

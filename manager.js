@@ -5,8 +5,8 @@ function _getSubscriptionContainer() {
 }
 
 Promise.all([
-  __collections,
-  __subscriptions
+  _getCollections(),
+  _getSubscriptions()
 ]).then(valueArr => {
   var collections = valueArr[0]
   var subscriptions = valueArr[1]
@@ -86,11 +86,11 @@ Promise.all([
     Array.prototype.slice.call(document.querySelectorAll(query))
     .map(node => {
       var channelId = node.closest('tr').dataset.channelExternalId
-      var collection = subscriptions[channelId].collection
+      var collection = collections[subscriptions[channelId]]
       var elem = document.createElement('div')
       node.appendChild(elem)
 
-      if(collection === null) {
+      if(collection === undefined) {
         elem.outerHTML = htmls['(none)']
       } else {
         elem.outerHTML = htmls[collection.name]
@@ -116,7 +116,7 @@ Promise.all([
   })
 })
 
-__collections.then(collections => {
+_getCollections().then(collections => {
   window.addEventListener('message',e => {
     if (event.source != window) {
       return
@@ -132,7 +132,6 @@ __collections.then(collections => {
       var label = collectionId === '' ? '' : collections[collectionId].name
       _getAddSubscriptionButton(subId).querySelector('.collection-label-wrapper').textContent = label
     }
-    console.log(e)
 
     if (event.data.type) {
       switch(event.data.type) {
