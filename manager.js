@@ -23,7 +23,7 @@ Promise.all([
     node.addEventListener('click',e => {
       if(e.target.hasAttribute('data-collection-id')) {
         var removedId = e.target.dataset.collectionId
-        if(window.confirm('Remove collection '+ collections[removedId].name+'?')) {
+        if(window.confirm('Remove collection '+ e.target.closest('tr').querySelector('.subscription-title').getAttribute('title') +'?')) {
           _removeCollection(e.target.dataset.collectionId)
         }
       }
