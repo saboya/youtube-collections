@@ -1,5 +1,19 @@
 'use strict'
 
+function _generatePopupOptions() {
+  return _getCollections().then(collections => {
+    return Promise.all(
+      [template.render('manager-subscription-popup-item', { id: '', label: '' })]
+      .concat(Object.keys(collections).map(k => {
+        return template.render('manager-subscription-popup-item', { id: k, label: collections[k].name })
+      }))
+    )
+  })
+  .then(htmls => {
+    return htmls.join('')
+  })
+}
+
 Promise.all([
   _getCollections(),
   _getSubscriptions()
@@ -60,25 +74,20 @@ Promise.all([
     })
   })
 
-  var buttons
-
-  Promise.all(
-    [template.render('manager-subscription-popup-item', { id: '', label: '' })].concat(
-    Object.keys(collections).map(k => {
-      return template.render('manager-subscription-popup-item', { id: k, label: collections[k].name })
-    }))
-  ).then(valueArr => {
-    buttons = valueArr.join('')
-    return Promise.all(Object.keys(collections).map(k => {
-      return template.render('manager-subscription-button', { id: k, label: collections[k].name, buttons: buttons }).then(html => {
-        return { [collections[k].name]: html }
-      })
-    }))
-  })
-  .then(valueArr => {
-    return template.render('manager-subscription-button', { id: '', label: '', buttons: buttons }).then(html => {
-      valueArr.push({'(none)':html})
-      return valueArr.reduce((all,curr) => Object.assign(all,curr),{})
+  _generatePopupOptions().then(buttonsHtml => {
+    return Promise.all(
+      Object.keys(collections).map(k => {
+        return template.render('manager-subscription-button', { id: k, label: collections[k].name, buttons: buttonsHtml })
+        .then(html => {
+          return { [collections[k].name]: html }
+        })
+      }).concat(template.render('manager-subscription-button', { id: '', label: '', buttons: buttonsHtml })
+        .then(html => {
+          return { '(none)': html }
+        })
+      )
+    ).then(arr => {
+      return arr.reduce((p,c) => Object.assign(p,c),{})
     })
   })
   .then(htmls => {
