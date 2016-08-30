@@ -1,24 +1,8 @@
 'use strict'
 
-var PREFIX
-
-const __prefix_promise = new Promise((resolve,reject) => {
-  function getLikePlaylistElement() {
-    return document.querySelector('#guide-container .guide-likes-playlist-icon')
-  }
-
-  function endPromise() {
-    if(getLikePlaylistElement() === null) {
-      reject('No like playlist id found')
-    }
-    else {
-      resolve(getLikePlaylistElement().closest('a')
-        .getAttribute('href').split('=').pop())
-    }
-  }
-
-  if (_getGuideSection() !== null) {
-    endPromise()
+const _guideLoaded = new Promise((resolve,reject) => {
+  if (document.getElementById('guide-container') !== null) {
+    resolve(document.getElementById('guide-container'))
   } else {
     var _guide_element = document.querySelector('#guide')
     var observer = new MutationObserver(mutations => {
@@ -26,7 +10,7 @@ const __prefix_promise = new Promise((resolve,reject) => {
         if (mutation.type === 'childList' && mutation.target === _guide_element) {
           observer.disconnect()
           observer.takeRecords()
-          endPromise()
+          resolve(document.getElementById('guide-container'))
         }
       })
     })
@@ -40,12 +24,66 @@ const __prefix_promise = new Promise((resolve,reject) => {
   }
 })
 
-__prefix_promise.then(prefix => {
+const _tokenId = _pageRequest('GET_TOKEN_ID')
+
+const _likePlaylistId = _guideLoaded.then(node => {
+  function getLikePlaylistElement() {
+    return node.querySelector('.guide-likes-playlist-icon')
+  }
+
+  var id = ''
+
+  if(getLikePlaylistElement() !== null) {
+    id = getLikePlaylistElement().closest('a')
+      .getAttribute('href').split('=').pop()
+  }
+
+  return id
+})
+
+const _channelId = _guideLoaded.then(node => {
+  function getLikePlaylistElement() {
+    return node.querySelector('.guide-my-channel-icon')
+  }
+
+  var id = ''
+
+  if(getLikePlaylistElement() !== null) {
+    id = getLikePlaylistElement().closest('a')
+      .getAttribute('href').split('/').pop()
+  }
+
+  return id
+})
+
+const _userId = new Promise((resolve,reject) => {
+  return Promise.all([
+    _tokenId,
+    _likePlaylistId,
+    _channelId
+  ])
+  .then(arr => {
+    return storage.get([
+      'idToken:'+arr[0],
+      'idLikePlaylist:'+arr[1],
+      'idChannel:'+arr[2]
+    ])
+    .then(values => {
+      if(Object.keys(values).length === 0) {
+      }
+      console.log(values)
+    })
+  })
+})
+
+var PREFIX
+
+_likePlaylistId.then(prefix => {
   PREFIX = prefix
 })
 
 function _getCollections() {
-  return __prefix_promise.then(prefix => {
+  return _likePlaylistId.then(prefix => {
   return storage.get(null).then(items => {
     return Object.keys(items).filter(k => k.indexOf('collection-'+PREFIX) === 0).map(k => {
       return { [k.substring(('collection-'+PREFIX+'-').length)]: items[k] }
@@ -60,7 +98,7 @@ function _getCollections() {
 }
 
 function _getSubscriptions() {
-  return __prefix_promise.then(prefix => {
+  return _likePlaylistId.then(prefix => {
   return storage.get(null).then(items => {
     return Object.keys(items).filter(k => k.indexOf('subscription-'+PREFIX) === 0).map(k => {
       return { [k.substring(('subscription-'+PREFIX+'-').length)]: items[k] }
@@ -104,7 +142,9 @@ function _removeSubscription(id) {
 }
 
 function _getGuideSection() {
-  return document.querySelector('#guide-subscriptions-section')
+  return _guideLoaded.then(guide => {
+    return document.getElementById('guide-subscriptions-section')
+  })
 }
 
 chrome.storage.onChanged.addListener((changes,area) => {

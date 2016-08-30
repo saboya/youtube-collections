@@ -1,11 +1,13 @@
 'use strict'
 
 Promise.all([
+  _getGuideSection(),
   _getCollections(),
   _getSubscriptions()
 ]).then(valueArr => {
-  var collections = valueArr[0]
-  var subscriptions = valueArr[1]
+  var guideSection = valueArr[0]
+  var collections = valueArr[1]
+  var subscriptions = valueArr[2]
 
   var _getSubscriptionCount = function(id) {
     var guideItem = document.getElementById(id+'-guide-item')
@@ -26,7 +28,7 @@ Promise.all([
 
   template.render('guide-section',{ title:'Collections' }).then(html => {
     var node = document.createElement('li')
-    _getGuideSection().parentNode.insertBefore(node,_getGuideSection())
+    guideSection.parentNode.insertBefore(node,guideSection)
     node.outerHTML = html
     return document.querySelector('#guide-collection-list .guide-channels-list')
   }).then(node => {
