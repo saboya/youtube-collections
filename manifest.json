@@ -15,6 +15,7 @@
     "storage"
   ],
   "web_accessible_resources": [
+    "page-request-inject.js",
     "img/*",
     "templates/*"
   ],
@@ -22,7 +23,7 @@
     {
       "matches": ["https://www.youtube.com/*"],
       "css": ["collections.css"],
-      "js": ["hashid.js","storage.js","template.js","common.js","guide.js"],
+      "js": ["hashid.js","storage.js","template.js","page-request.js","common.js","guide.js"],
       "run_at": "document_end"
     },
     {
