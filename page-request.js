@@ -38,7 +38,7 @@ function _pageRequest(type,data={}) {
         }
       }
 
-      window.postMessage(Object.assign(data,{ type: 'PAGE_REQUEST', request: type, eventId: eventId }), '*')
+      window.postMessage({ type: 'PAGE_REQUEST', request: type, eventId: eventId, data: data }, '*')
       window.addEventListener('message', resolver)
     })
   })
