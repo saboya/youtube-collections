@@ -1,5 +1,6 @@
 'use strict'
 
+;(function(config){
 window.addEventListener('message', event => {
   if (event.source != window) {
     return
@@ -9,6 +10,10 @@ window.addEventListener('message', event => {
     var response = null
 
     switch(event.data.request) {
+      case 'SET_CONFIG':
+        Object.assign(config,event.data.data)
+        response = true
+        break
       case 'GET_TOKEN_ID':
         response = yt.config_.ID_TOKEN
         break
@@ -24,3 +29,4 @@ window.addEventListener('message', event => {
 })
 
 window.postMessage({ type: 'PAGE_READY' },'*')
+})({})
