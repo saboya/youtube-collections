@@ -4,7 +4,7 @@
   "name": "Youtube Collections",
   "short_name": "ytcollection",
   "description": "Collections for Youtube. You know, like we used to have until it was removed for no reason.",
-  "version": "0.2",
+  "version": "0.3",
   "icons": {
     "16": "collections-16.png",
     "48": "collections-48.png",
