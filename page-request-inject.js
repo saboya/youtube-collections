@@ -15,7 +15,9 @@ window.addEventListener('message', event => {
         response = true
         break
       case 'GET_TOKEN_ID':
-        response = yt.config_.ID_TOKEN
+        if(typeof yt != 'undefined' && yt.config_ != 'undefined' && yt.config_.ID_TOKEN != 'undefined') {
+          response = yt.config_.ID_TOKEN
+        }
         break
     }
 

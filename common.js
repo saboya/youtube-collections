@@ -1,7 +1,7 @@
 'use strict'
 
 const _guideLoaded = new Promise((resolve,reject) => {
-  if (document.getElementById('guide-container') !== null) {
+  if (document.getElementById('guide-subscriptions-section') !== null) {
     resolve(document.getElementById('guide-container'))
   } else {
     var _guide_element = document.querySelector('#guide')
@@ -31,7 +31,7 @@ const _likePlaylistId = _guideLoaded.then(node => {
     return node.querySelector('.guide-likes-playlist-icon')
   }
 
-  var id = ''
+  var id = null
 
   if(getLikePlaylistElement() !== null) {
     id = getLikePlaylistElement().closest('a')
@@ -42,66 +42,87 @@ const _likePlaylistId = _guideLoaded.then(node => {
 })
 
 const _channelId = _guideLoaded.then(node => {
-  function getLikePlaylistElement() {
+  function getMyChannelElement() {
     return node.querySelector('.guide-my-channel-icon')
   }
 
-  var id = ''
+  var id = null
 
-  if(getLikePlaylistElement() !== null) {
-    id = getLikePlaylistElement().closest('a')
+  if(getMyChannelElement() !== null) {
+    id = getMyChannelElement().closest('a')
       .getAttribute('href').split('/').pop()
   }
 
   return id
 })
 
-const _userId = new Promise((resolve,reject) => {
-  return Promise.all([
-    _tokenId,
-    _likePlaylistId,
-    _channelId
+const _userId = Promise.all([
+  _tokenId,
+  _likePlaylistId,
+  _channelId
+])
+.then(arr => {
+  var keys = []
+  arr[0] !== null && keys.push('idToken:'+arr[0])
+  arr[1] !== null && keys.push('idLikePlaylist:'+arr[1])
+  arr[2] !== null && keys.push('idChannel:'+arr[2])
+
+  if(keys.length === 0) {
+    throw('Nenhuma chave encontrada para diferenciar o usuario')
+  }
+
+  return storage.get([
+    'idToken:'+arr[0],
+    'idLikePlaylist:'+arr[1],
+    'idChannel:'+arr[2]
   ])
-  .then(arr => {
-    return storage.get([
-      'idToken:'+arr[0],
-      'idLikePlaylist:'+arr[1],
-      'idChannel:'+arr[2]
-    ])
-    .then(values => {
-      if(Object.keys(values).length === 0) {
+  .then(values => {
+    var savedKeys = Object.keys(values)
+    var keysToSave = []
+
+    var id
+    if(savedKeys.length === 0) {
+      id = HashID.generate()
+      keysToSave = keys
+    }
+    else {
+      if(savedKeys.length < keys) {
+        keysToSave = keys.filter(k => !savedKeys,includes(k))
       }
-      console.log(values)
-    })
+      id = values[savedKeys[0]]
+    }
+    return storage.set(keysToSave.map(k => ({ [k]: id })).reduce((p,c) => Object.assign(p,c),{})).then(() => id)
   })
 })
 
-var PREFIX
+function _getCollectionKey(collectionId) {
+  return _userId.then(userId => userId+':collection:'+collectionId)
+}
 
-_likePlaylistId.then(prefix => {
-  PREFIX = prefix
-})
+function _getSubscriptionKey(subscriptionId) {
+  return _userId.then(userId => userId+':subscription:'+subscriptionId)
+}
 
 function _getCollections() {
-  return _likePlaylistId.then(prefix => {
-  return storage.get(null).then(items => {
-    return Object.keys(items).filter(k => k.indexOf('collection-'+PREFIX) === 0).map(k => {
-      return { [k.substring(('collection-'+PREFIX+'-').length)]: items[k] }
-    }).sort((a,b) => {
-      var id1 = Object.keys(a)[0]
-      var id2 = Object.keys(b)[0]
-      return (a[id1].name<b[id2].name?-1:(a[id1].name>b[id2].name?1:0))
+  return _userId.then(prefix => {
+    return storage.get(null).then(items => {
+      return Object.keys(items).filter(k => k.indexOf(prefix+':collection') === 0).map(k => {
+        return { [k.substring((prefix+':collection:').length)]: items[k] }
+      }).sort((a,b) => {
+        var id1 = Object.keys(a)[0]
+        var id2 = Object.keys(b)[0]
+        return (a[id1].name<b[id2].name?-1:(a[id1].name>b[id2].name?1:0))
+      })
+      .reduce((collections,collection) => Object.assign(collections,collection),{})
     })
-    .reduce((collections,collection) => Object.assign(collections,collection),{})
-  })
   })
 }
 
 function _getSubscriptions() {
-  return _likePlaylistId.then(prefix => {
+  return _userId.then(prefix => {
   return storage.get(null).then(items => {
-    return Object.keys(items).filter(k => k.indexOf('subscription-'+PREFIX) === 0).map(k => {
-      return { [k.substring(('subscription-'+PREFIX+'-').length)]: items[k] }
+    return Object.keys(items).filter(k => k.indexOf(prefix+':subscription') === 0).map(k => {
+      return { [k.substring((prefix+':subscription:').length)]: items[k] }
     }).reduce((subscriptions,sub) => Object.assign(subscriptions,sub),{})
   })
   })
@@ -114,31 +135,35 @@ function _addCollection(name) {
     while(collections[newId] !== undefined) {
       newId = HashID.generate()
     }
-
-    return storage.set({
-      ['collection-'+PREFIX+'-'+newId]: {
-        name: name
-      }
+    _getCollectionKey(newId).then(key => {
+      return storage.set({
+        [key]: {
+          name: name
+        }
+      })
     })
   })
 }
 
 function _removeCollection(id) {
   return _getSubscriptions().then(s => {
-    return storage.remove(
+    return Promise.all(
       Object.keys(s).filter(k => s[k] === id).map(k => {
-        return 'subscription-'+PREFIX+'-'+k
-      }).concat('collection-'+PREFIX+'-'+id)
+        return _getSubscriptionKey(k)
+      }).concat(_getCollectionKey(id))
     )
+    .then(valueArr => {
+      return storage.remove(valueArr)
+    })
   })
 }
 
 function _addSubscription(subId,collectionId) {
-  return storage.set({ ['subscription-'+PREFIX+'-'+subId]: collectionId })
+  return _getSubscriptionKey(subId).then(key => storage.set({ [key]: collectionId }))
 }
 
 function _removeSubscription(id) {
-  return storage.remove('subscription-'+PREFIX+'-'+id)
+  return _getSubscriptionKey(id).then(key => storage.remove(key))
 }
 
 function _getGuideSection() {
@@ -147,6 +172,10 @@ function _getGuideSection() {
   })
 }
 
+_userId.then(userId => {
+var collectionPrefix = userId+':collection:'
+var subscriptionPrefix = userId+':subscription:'
+
 chrome.storage.onChanged.addListener((changes,area) => {
   var postEvent = (type,data) => {
     window.postMessage(Object.assign(data,{ type: type }), '*')
@@ -154,45 +183,46 @@ chrome.storage.onChanged.addListener((changes,area) => {
   Object.keys(changes).map(k => {
     if(changes[k].newValue === undefined) {
       // Removal events
-      if(k.indexOf('collection') === 0) {
+      if(k.indexOf(collectionPrefix) === 0) {
         postEvent('COLLECTION_REMOVED',{
-          id: k.substring(('collection-'+PREFIX+'-').length),
+          id: k.substring((collectionPrefix).length),
           name: changes[k].oldValue.name
         })
-      } else if(k.indexOf('subscription') === 0) {
+      } else if(k.indexOf(subscriptionPrefix) === 0) {
         postEvent('SUBSCRIPTION_REMOVED',{
-          subscriptionId: k.substring(('subscription-'+PREFIX+'-').length),
+          subscriptionId: k.substring((subscriptionPrefix).length),
           collectionId: changes[k].oldValue
         })
       }
     } else if(changes[k].oldValue === undefined) {
       // Add events
-      if(k.indexOf('collection') === 0) {
+      if(k.indexOf(collectionPrefix) === 0) {
         postEvent('COLLECTION_ADDED',{
-          id: k.substring(('collection-'+PREFIX+'-').length),
+          id: k.substring((collectionPrefix).length),
           name: changes[k].newValue.name
         })
-      } else if(k.indexOf('subscription') === 0) {
+      } else if(k.indexOf(subscriptionPrefix) === 0) {
         postEvent('SUBSCRIPTION_ADDED',{
-          subscriptionId: k.substring(('subscription-'+PREFIX+'-').length),
+          subscriptionId: k.substring((subscriptionPrefix).length),
           collectionId: changes[k].newValue
         })
       }
     } else {
       // Update events
-      if(k.indexOf('collection') === 0) {
+      if(k.indexOf(collectionPrefix) === 0) {
         postEvent('COLLECTION_UPDATED',{
-          collectionId: k.substring(('collection-'+PREFIX+'-').length),
+          collectionId: k.substring((collectionPrefix).length),
           oldValue: changes[k].oldValue,
           newValue: changes[k].newValue
         })
-      } else if(k.indexOf('subscription') === 0) {
+      } else if(k.indexOf(subscriptionPrefix) === 0) {
         postEvent('SUBSCRIPTION_UPDATED',{
-          subscriptionId: k.substring(('subscription-'+PREFIX+'-').length),
+          subscriptionId: k.substring((subscriptionPrefix).length),
           oldValue: changes[k].oldValue,
           newValue: changes[k].newValue
         })
       }
     }
   })
+})
 })
