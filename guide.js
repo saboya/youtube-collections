@@ -22,8 +22,64 @@ Promise.all([
       .map(k => _getSubscriptionCount(k)).reduce((p,c) => p+c,0)
   }
 
+  var _updateCollectionCount = function(id) {
+    var count = Array.prototype.slice.call(_getCollectionGuideItem(id)
+    .querySelector('ul').querySelectorAll('.guide-item'))
+    .map(e => {
+      return e.querySelector('span.no-count') ? 0 : parseInt(e.querySelector('.guide-count-value').textContent)
+    }).reduce((p,c) => p+c,0)
+
+    _getCollectionGuideItem(id).querySelector('.guide-count-value').textContent = count
+  }
+
+  var _getCollectionGuideItem = function(id) {
+    return document.getElementById(id+'-collection-guide-item')
+  }
+
   var _getSubscriptionGuideItem = function(id) {
     return document.getElementById(id+'-guide-item')
+  }
+
+  var _renderGuideCollectionItem = function(id,name) {
+    return template.render('guide-section-item',{
+      id: id,
+      name: name,
+      count: function(count) { return count === 0 ? '':count; }(_getCollectionCount(id))
+    }).then(html => {
+      var elem = document.createElement('li')
+      document.querySelector('#guide-collection-list .guide-channels-list').appendChild(elem)
+      elem.outerHTML = html
+
+      Object.keys(subscriptions).filter(key => {
+        return (_getSubscriptionGuideItem(key) !== null) &&
+          (subscriptions[key] === id)
+      }).forEach(key => {
+        _cloneSubscriptionItem(key,id)
+      })
+    })
+  }
+
+  var _cloneSubscriptionItem = function(subId,collectionId) {
+    var newNode = _getSubscriptionGuideItem(subId).cloneNode(true)
+    newNode.removeAttribute('id')
+    var thumb = newNode.querySelector('img')
+    var imgSrc = thumb.dataset.thumb
+    if(imgSrc !== undefined) {
+      thumb.setAttribute('src',thumb.dataset.thumb)
+    }
+
+    document.getElementById(collectionId+'-guide-channel-list').appendChild(newNode)
+  }
+
+  var _updateCollectionListHeight = function(id) {
+    var elem = _getCollectionGuideItem(id)
+    if(elem.classList.contains('collection-list-open')) {
+      var height = 28
+      var id = elem.querySelector('.collection-item a').dataset.collectionId
+      var listNode = document.getElementById(id+'-guide-channel-list')
+      height += listNode.offsetHeight
+      elem.style.maxHeight = height+'px'
+    }
   }
 
   template.render('guide-section',{ title:'Collections' }).then(html => {
@@ -47,30 +103,47 @@ Promise.all([
     return document.querySelector('#guide-collection-list .guide-channels-list')
   }).then(node => {
     return Object.keys(collections).map(id => {
-      return template.render('guide-section-item',{
-        id: id,
-        name: collections[id].name,
-        count: function(count) { return count === 0 ? '':count; }(_getCollectionCount(id))
-      }).then(html => {
-        var elem = document.createElement('li')
-        node.appendChild(elem)
-        elem.outerHTML = html
-
-        Object.keys(subscriptions).filter(key => {
-          return (_getSubscriptionGuideItem(key) !== null) &&
-            (subscriptions[key] === id)
-        }).forEach(key => {
-          var newNode = _getSubscriptionGuideItem(key).cloneNode(true)
-          newNode.removeAttribute('id')
-          var thumb = newNode.querySelector('img')
-          var imgSrc = thumb.dataset.thumb
-          if(imgSrc !== undefined) {
-            thumb.setAttribute('src',thumb.dataset.thumb)
-          }
-
-          document.getElementById(id+'-guide-channel-list').appendChild(newNode)
-        })
-      })
+      _renderGuideCollectionItem(id,collections[id].name)
     })
   })
+
+  window.addEventListener('message',event => {
+    if (event.source != window) {
+      return
+    }
+
+    if (event.data.type) {
+      switch(event.data.type) {
+        case 'SUBSCRIPTION_ADDED':
+          _cloneSubscriptionItem(event.data.subscriptionId,event.data.collectionId)
+          _updateCollectionListHeight(event.data.collectionId)
+          _updateCollectionCount(event.data.collectionId)
+          break;
+        case 'SUBSCRIPTION_REMOVED':
+          var elem = _getCollectionGuideItem(event.data.collectionId)
+          if(elem) {
+            elem.querySelector('a[data-external-id="'+event.data.subscriptionId+'"]').closest('li').remove()
+          _updateCollectionCount(event.data.collectionId)
+          }
+          break;
+        case 'SUBSCRIPTION_UPDATED':
+          _getCollectionGuideItem(event.data.oldValue)
+            .querySelector('a[data-external-id="'+event.data.subscriptionId+'"]').closest('li').remove()
+          _cloneSubscriptionItem(event.data.subscriptionId,event.data.newValue)
+          _updateCollectionListHeight(event.data.newValue)
+          _updateCollectionCount(event.data.newValue)
+          _updateCollectionCount(event.data.oldValue)
+          break;
+        case 'COLLECTION_ADDED':
+          _renderGuideCollectionItem(event.data.id,event.data.name)
+          break;
+        case 'COLLECTION_REMOVED':
+          _getCollectionGuideItem(event.data.id).remove()
+          break;
+        case 'COLLECTION_UPDATED':
+          break;
+      }
+    }
+  })
 })
+
