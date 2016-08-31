@@ -117,7 +117,6 @@ Promise.all([
         case 'SUBSCRIPTION_UPDATED':
           _getCollectionGuideItem(event.data.oldValue)
             .querySelector('a[data-external-id="'+event.data.subscriptionId+'"]').closest('li').remove()
-          console.log(event.data)
           _cloneSubscriptionItem(event.data.subscriptionId,event.data.newValue)
           _updateCollectionListHeight(event.data.newValue)
           break;
