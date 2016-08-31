@@ -22,6 +22,16 @@ Promise.all([
       .map(k => _getSubscriptionCount(k)).reduce((p,c) => p+c,0)
   }
 
+  var _updateCollectionCount = function(id) {
+    var count = Array.prototype.slice.call(_getCollectionGuideItem(id)
+    .querySelector('ul').querySelectorAll('.guide-item'))
+    .map(e => {
+      return e.querySelector('span.no-count') ? 0 : parseInt(e.querySelector('.guide-count-value').textContent)
+    }).reduce((p,c) => p+c,0)
+
+    _getCollectionGuideItem(id).querySelector('.guide-count-value').textContent = count
+  }
+
   var _getCollectionGuideItem = function(id) {
     return document.getElementById(id+'-collection-guide-item')
   }
@@ -107,11 +117,13 @@ Promise.all([
         case 'SUBSCRIPTION_ADDED':
           _cloneSubscriptionItem(event.data.subscriptionId,event.data.collectionId)
           _updateCollectionListHeight(event.data.collectionId)
+          _updateCollectionCount(event.data.collectionId)
           break;
         case 'SUBSCRIPTION_REMOVED':
           var elem = _getCollectionGuideItem(event.data.collectionId)
           if(elem) {
             elem.querySelector('a[data-external-id="'+event.data.subscriptionId+'"]').closest('li').remove()
+          _updateCollectionCount(event.data.collectionId)
           }
           break;
         case 'SUBSCRIPTION_UPDATED':
@@ -119,6 +131,8 @@ Promise.all([
             .querySelector('a[data-external-id="'+event.data.subscriptionId+'"]').closest('li').remove()
           _cloneSubscriptionItem(event.data.subscriptionId,event.data.newValue)
           _updateCollectionListHeight(event.data.newValue)
+          _updateCollectionCount(event.data.newValue)
+          _updateCollectionCount(event.data.oldValue)
           break;
         case 'COLLECTION_ADDED':
           _renderGuideCollectionItem(event.data.id,event.data.name)
