@@ -16,8 +16,8 @@ Collections are saved on Google's servers, so it will syncrhonize with other pla
 ### YouTube Menu
 - [x] Display collections and their subscriptions
 - [x] Display aggregate notification count for Collections
-- [ ] Dynamically update collections when a collection is added
-- [ ] Dynamically update subscriptions inside collections when a collection is added
+- [x] Dynamically update collections when a collection is added
+- [x] Dynamically update subscriptions inside collections when a collection is added
 
 ### Management page:
 - [x] Add and remove collections
