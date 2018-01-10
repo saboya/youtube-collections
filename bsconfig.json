@@ -1,0 +1,13 @@
+{
+  "name": "youtube-collections",
+  "bsc-flags": ["-bs-no-version-header", "-bs-super-errors"],
+  "reason": {"react-jsx" : 2},
+  "bs-dependencies": ["bs-webapi", "reason-react"],
+  "sources": [
+    {
+      "dir": "src",
+      "subdirs": true
+    }
+  ],
+  "refmt": 3
+}

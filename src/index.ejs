@@ -1,0 +1,24 @@
+<% var item, key %>
+
+<% htmlWebpackPlugin.options.appMountIds = htmlWebpackPlugin.options.appMountIds || [] %>
+<% htmlWebpackPlugin.options.links = htmlWebpackPlugin.options.links || [] %>
+<% htmlWebpackPlugin.options.meta = htmlWebpackPlugin.options.meta || [] %>
+<% htmlWebpackPlugin.options.scripts = htmlWebpackPlugin.options.scripts || [] %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <% if (htmlWebpackPlugin.files.favicon) { %>
+    <link href="<%= htmlWebpackPlugin.files.favicon %>" rel="shortcut icon">
+    <% } %>
+</head>
+<body>
+<div id="main"></div>
+<div id="guide-inner-content">
+    <ytd-guide-renderer id="guide-renderer"></ytd-guide-renderer>
+</div>
+</body>
+</html>

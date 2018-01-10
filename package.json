@@ -1,0 +1,32 @@
+{
+  "name": "youtube-collections",
+  "version": "1.0.0",
+  "description": "Collections for Youtube. You know, like we used to have until it was removed for no reason.",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --open",
+    "build": "bsb -make-world && webpack",
+    "start-old": "bsb -make-world -w",
+    "clean": "bsb -clean-world",
+    "test": "exit 0",
+    "webpack": "webpack -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saboya/youtube-collections.git"
+  },
+  "author": "Rodrigo Saboya",
+  "license": "MIT",
+  "devDependencies": {
+    "bs-platform": "^2.1.0",
+    "bs-webapi": "^0.8.0",
+    "html-webpack-plugin": "^2.30.1",
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.10.1"
+  },
+  "dependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "reason-react": "^0.3.1"
+  }
+}
