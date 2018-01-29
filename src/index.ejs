@@ -18,7 +18,17 @@
 <body>
 <div id="main"></div>
 <div id="guide-inner-content">
-    <ytd-guide-renderer id="guide-renderer"></ytd-guide-renderer>
+    <ytd-guide-renderer id="guide-renderer">
+        <div id="sections" class="style-scope ytd-guide-renderer">
+            <ytd-guide-section-renderer class="style-scope ytd-guide-renderer">
+                <h3 class="style-scope ytd-guide-section-renderer">
+                    <yt-formatted-string id="guide-section-title" class="style-scope ytd-guide-section-renderer">
+                        <a>Subscriptions</a>
+                    </yt-formatted-string>
+                </h3>
+            </ytd-guide-section-renderer>
+        </div>
+    </ytd-guide-renderer>
 </div>
 </body>
 </html>

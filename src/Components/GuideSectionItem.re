@@ -1,6 +1,6 @@
 let component = ReasonReact.statelessComponent("GuideSectionItem");
 
-let make = (~label, _children) => {
+let make = (~label, ~counter, _children) => {
   ...component,
   render: (_self) => ReasonReact.createDomElement(
     "ytd-guide-entry-renderer",
@@ -32,7 +32,7 @@ let make = (~label, _children) => {
             {ReasonReact.stringToElement(label)}
           </span>,
           <span className="guide-entry-count style-scope ytd-guide-entry-renderer">
-            {ReasonReact.stringToElement("counter")}
+            {ReasonReact.stringToElement(counter)}
           </span>
         |]
       )
