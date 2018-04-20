@@ -1,14 +1,15 @@
 const meta = (compiler, options) => {
   return new Promise((resolve, reject) => {
     compiler.plugin('compilation', (compilation, data) => {
+      const files = {}
       data.normalModuleFactory.plugin('parser', (parser, parserOptions) => {
         parser.plugin('program' , (ast, comments) => {
-          const files = {}
           const file = parser.state.current.resource
-          const regexp = /^\s*(__RUN_AT__|__MATCHES__):\s*(.+)\s*$/
+          const regexp = /^\s*(__RUN_AT__|__MATCHES__|__TYPE__):\s*(.+)\s*$/
           const keys = {
             __MATCHES__: 'matches',
             __RUN_AT__: 'run_at',
+            __TYPE__: 'type',
           }
 
           comments.filter(comment => {
@@ -27,9 +28,9 @@ const meta = (compiler, options) => {
             }
           })
 
-          resolve(files)
         })
       })
+      resolve(files)
     })
   })
 }

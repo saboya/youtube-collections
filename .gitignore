@@ -39,3 +39,6 @@ public/
 /lib/*
 !/lib/js/*
 .bsb.lock
+
+vsworkspace.code-workspace
+dist/

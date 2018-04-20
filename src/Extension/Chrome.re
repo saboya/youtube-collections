@@ -24,16 +24,16 @@ type storageKey =
 
 module Storage = {
   module Local = {
-    [@bs.val] external get : (Js.Nullable.t(string), 'a => unit) => unit = "chrome.storage.local.get";
+    [@bs.val] external get : (Js.Nullable.t(string), Js.t({..}) => unit) => unit = "chrome.storage.local.get";
     [@bs.val] external set : Js.t({..}) => unit = "chrome.storage.local.set";
   };
 
-  [@bs.val] external getAll : (Js.null({..}), 'a => unit) => unit = "chrome.storage.get";
-  [@bs.val] external get : (Js.Nullable.t(string), 'a => unit) => unit = "chrome.storage.get";
-  [@bs.val] external set : Js.t({..}) => unit = "chrome.storage.set";
-
-  [@bs.val] external getSync : (Js.Nullable.t(string), 'a => unit) => unit = "chrome.storage.sync.get";
-  [@bs.val] external setSync : Js.t({..}) => unit = "chrome.storage.sync.set";
+  module Sync = {
+    [@bs.val] external getAll : (Js.null({..}), 'a => unit) => unit = "chrome.storage.sync.get";
+    [@bs.val] external clear : (unit => unit) => unit = "chrome.storage.sync.clear";
+    [@bs.val] external get : (Js.Nullable.t(string), 'a => unit) => unit = "chrome.storage.sync.get";
+    [@bs.val] external set : Js.t({..}) => unit = "chrome.storage.sync.set";
+  };
 
   [@bs.val]
   external addChangeListener :

@@ -8,11 +8,26 @@ const WriteFilePlugin = require('write-file-webpack-plugin')
 
 module.exports = {
   target: 'web',
-  entry: () => {},
+  entry: {
+    "default": './lib/js/src/scripts/default.js',
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          { loader: "style-loader" },
+          { loader: "css-loader" }
+        ]
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
+        loader: 'url-loader',
+      },
+    ],
+  },
   plugins: [
     new ChromeManifestPlugin({
-      backgroundScriptsDir: 'lib/js/src/background_scripts',
-      contentScriptsDir: 'lib/js/src/content_scripts',
       name: 'Youtube Collections',
       package: pkg
     }),
@@ -20,6 +35,6 @@ module.exports = {
   ],
   output: {
     path: path.join(__dirname, "dist"),
-    filename: '[name]',
+    filename: '[name].js',
   },
 }

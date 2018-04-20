@@ -1,74 +1,51 @@
 open Webapi.Dom;
+open YT;
 
-let unwrapUnsafely = fun
-  | Some(v) => v
-  | None => raise(Invalid_argument("Passed `None` to unwrapUnsafely"));
+type action =
+  | SubscriptionsGuideLoaded(Dom.element)
+;
 
-type state = 
-  | Loading
-  | Loaded
-  | Error;
+type state = {
+  guideLoaded: bool,
+  collectionSectionElement: Dom.element
+};
 
 let component = ReasonReact.reducerComponent("GuideLoaded");
 
 let make = (~render, _children) => {
   ...component,
-  initialState: () => {
-    let temp = Document.querySelectorAll("#guide-renderer > #sections > ytd-guide-section-renderer > h3 > #guide-section-title > a", document)
-    |> NodeList.toArray
-    |> Js.Array.find(node => (node
-      |> Element.ofNode
-      |> unwrapUnsafely
-      |> Element.innerHTML
-    ) === "Subscriptions");
-
-    switch (temp) {
-      | None => Loading
-      | Some(_node) => Loaded
-    }
-  },
+  initialState: () => ({
+    guideLoaded: false,
+    collectionSectionElement: YT.newGuideSectionElement()
+  }),
   subscriptions: (self) => [
     Sub(
       () => {
-        let guideElement = document
-        |> Document.getElementById("guide-inner-content")
-        |> unwrapUnsafely;
-        let observer = MutationObserver.make((records, _observer) => {
-          records
-          |> Array.map((record) => {
-            if (MutationRecord.type_(record) === "childList" && (MutationRecord.target(record) |> Element.ofNode |> unwrapUnsafely) === guideElement) {
-              self.send(Loaded);
-            }
-          })
-          |> ignore
-        });
-
-        switch (self.state) {
-        | Loading => observer |> MutationObserver.observe(guideElement, {
-            "childList": true,
-            "subtree": true,
-            "attributes": true,
-            "characterData": true
-          });
-        | Loaded => ()
-        | Error => ()
-        };
- 
-        observer
+        YT.whenSubscriptionsGuideLoaded
+        |> Js.Promise.then_((element) => {
+          self.send(SubscriptionsGuideLoaded(element));
+          Js.Promise.resolve();
+        })
+        |> ignore;
       },
-      (observer) => {
-        observer |> MutationObserver.disconnect;
-        observer |> MutationObserver.takeRecords |> ignore;
-        ()
-      }
+      () => ()
     )
   ],
-  reducer: (action, _state) => ReasonReact.Update(action),
+  reducer: (action, state) => {
+  switch(action) {
+    | SubscriptionsGuideLoaded(subscriptionSectionElement) => {
+      subscriptionSectionElement
+      |> Element.closest("#sections")
+      |> Element.insertBefore(state.collectionSectionElement, subscriptionSectionElement)
+      |> ignore;
+
+      ReasonReact.Update({...state, guideLoaded: true });
+    }
+  }},
   render: ({state}) => {
-    switch (state) {
-    | Loading => ReasonReact.nullElement
-    | Loaded => render()
-    | Error => render()
+    switch (state.guideLoaded) {
+    | false => ReasonReact.nullElement
+    | true => render(state.collectionSectionElement)
     }
   }
 };
