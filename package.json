@@ -1,0 +1,29 @@
+{
+  "name": "youtube-collections",
+  "version": "1.0.0",
+  "description": "Collections for Youtube. You know, like we used to have until it was removed for no reason.",
+  "main": "index.js",
+  "repository": "git@github.com:saboya/youtube-collections.git",
+  "author": "Rodrigo Saboya <saboya@users.noreply.github.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^24.0.13",
+    "@types/react": "^16.8.17",
+    "@types/react-dom": "^16.8.4",
+    "@types/webpack": "^4.4.31",
+    "@types/webpack-sources": "^0.1.5",
+    "jest": "^24.8.0",
+    "jest-junit": "^6.4.0",
+    "ts-jest": "^24.0.2",
+    "tslint": "^5.16.0",
+    "tslint-config-standard": "^8.0.1",
+    "typescript": "^3.4.5",
+    "webpack": "^4.30.0",
+    "webpack-chrome-manifest-generator-plugin": "^1.0.1",
+    "webpack-dev-server": "^3.4.1"
+  },
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  }
+}
