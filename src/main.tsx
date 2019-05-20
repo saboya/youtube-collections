@@ -2,16 +2,14 @@ import * as React from 'react'
 import { render } from 'react-dom'
 
 import YT from './components/YT'
-import { useSubscritions } from './hooks/useSubscriptions'
-import { useCollections } from './hooks/useCollections'
-import { GuideSection } from './components/GuideSection'
-import { GuideLoaded } from './components/GuideLoaded'
+import useCollections from './hooks/useCollections'
+import { CollectionsSection } from './components/CollectionsSection'
 
-const collectionIcon = require('../icons/collections-48.png')
+const collectionIcon = require('../collections-48.png')
 
 /*__TYPE__: "content"*/
 /*__MATCHES__: ["https://www.youtube.com/*"]*/
-/*__RUN_AT__: "document_idle"*/
+/*__RUN_AT__: "document_end"*/
 
 const renderRoot = document.createElement('div')
 
@@ -23,14 +21,11 @@ documentFragment.getRootNode()
 documentFragment.appendChild(renderRoot)
 
 render(
-  <GuideLoaded render={() => {
-    const [subscriptions] = useSubscritions()
-    const [collections] = useCollections()
+  <CollectionsSection>
+    {() => {
+      const [collections] = useCollections()
 
-    console.log(subscriptions)
-
-    return (
-      <GuideSection>
+      return <>
         <YT.Guide.SectionTitle>
           Collections
         </YT.Guide.SectionTitle>
@@ -45,15 +40,8 @@ render(
             />
           ))}
         </YT.Guide.SectionItems>
-        <YT.DropDown left='100px' top='100px' isOpen={true}>
-          {collections.map((collection, i) => (
-            <YT.DropDown.Item key={i} checked={true}>
-              {collection.label}
-            </YT.DropDown.Item>
-          ))}
-        </YT.DropDown>
-      </GuideSection>
-    )
-  }} />,
+      </>
+    }}
+  </CollectionsSection>,
   renderRoot,
 )

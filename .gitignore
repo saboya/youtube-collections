@@ -64,3 +64,6 @@ typings/
 
 # JUnit reporter
 junit.xml
+
+dist/
+lib/

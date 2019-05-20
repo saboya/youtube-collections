@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { SectionItemIcon } from './'
+const style = require('./style.css')
 
 interface Props {
   label?: string
@@ -9,32 +9,14 @@ interface Props {
   uri: string
 }
 
-export const SectionItem: React.FunctionComponent<Props> = (props) => (
-  React.createElement(
-    'ytd-guide-entry-renderer',
-    {
-      role: 'option',
-      tabIndex: 0,
-      'aria-disabled': false,
-      className: 'style-scope ytd-guide-section-renderer',
-      'disable-upgrade': 'a',
-    },
-    <a
-      id='enpoint'
-      className='yt-simple-endpoint style-scope ytd-guide-entry-renderer'
-      href={props.uri}
-    >
-      <SectionItemIcon round={true}>
-        <img id='img' className='style-scope yt-img-shadow' src={props.image} />
-      </SectionItemIcon>,
-      <span
-        className='title style-scope ytd-guide-entry-renderer'
-      >
-        {props.label}
-      </span>,
-      <span className='guide-entry-count style-scope ytd-guide-entry-renderer'>
-        {props.counter > 0 ? props.counter : ''}
-      </span>
-    </a>,
+export const SectionItem: React.FunctionComponent<Props> = (props) => {
+  return (
+    <li className={style.ytc__section__list__item}>
+      <div className={style.ytc__paper__item}>
+        <span className='title style-scope ytd-guide-entry-renderer'>
+          {props.label}
+        </span>
+      </div>
+    </li>
   )
-)
+}

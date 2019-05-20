@@ -1,7 +1,7 @@
 interface Collection {
-  id: string
   label: string
   counter: number
+  subscriptions: string[]
 }
 
 export type useCollectionsReturn = [Collection[]] & {
@@ -9,9 +9,12 @@ export type useCollectionsReturn = [Collection[]] & {
 }
 
 export const useCollections: () => useCollectionsReturn = () => {
-  const collections = [] as Collection[]
+  const collections: Collection[] = [{
+    label: 'Mashups',
+    counter: 0,
+    subscriptions: ['UC-_SoG6x0XvcQRgQEh7Ce9Q', 'UC9ecwl3FTG66jIKA9JRDtmg'],
+  }]
 
-  // Can't type this shit correctly in Typescript
   const temp = [collections] as any
   temp.collections = collections
 

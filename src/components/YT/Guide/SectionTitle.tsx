@@ -1,14 +1,9 @@
 import * as React from 'react'
 
-export const SectionTitle: React.FunctionComponent = (props) => (
-  <h3 className='style-scope ytd-guide-section-renderer'>
-    {React.createElement(
-      'yt-formatted-string',
-      {
-        id: 'guide-section-title',
-        className: 'style-scope ytd-guide-section-renderer',
-      },
-      props.children,
-    )}
+const style = require('./style.css')
+
+export const SectionTitle: React.FunctionComponent = (props) => {
+  return <h3 className={style.ytc__section__style}>
+    {props.children}
   </h3>
-)
+}

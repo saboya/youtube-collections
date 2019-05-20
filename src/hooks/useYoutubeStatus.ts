@@ -22,29 +22,40 @@ export const useYoutubeStatus: () => useYoutubeStatusReturn = () => {
   })
 
   const [guideRendererElement] = useElementReady({
-    mutationCallback: () => document.querySelector('#guide-inner-content > ytd-guide-renderer') || undefined,
-    targetNode: document.querySelector('guide-inner-content') as HTMLBodyElement,
+    mutationCallback: () => document.getElementById('guide-renderer') || undefined,
+    targetNode: document.getElementById('guide-inner-content'),
   })
 
   const getSubscriptionsSectionElement = React.useCallback(() => {
-    return Array
+    const elem = Array
       .from(document.querySelectorAll(
-        '#guide-renderer > #sections > ytd-guide-section-renderer > h3 > #guide-section-title > a',
+        '#guide-renderer > #sections > ytd-guide-section-renderer > h3 > #guide-section-title',
       ))
       .find(elem => elem.innerHTML === 'Subscriptions')
+
+    if (elem !== undefined) {
+      return elem.closest('ytd-guide-section-renderer') || undefined
+    }
+
+    return undefined
   }, [])
+
+  const [sectionsElement] = useElementReady({
+    mutationCallback: () => document.querySelector('#guide-inner-content > ytd-guide-renderer #sections') || undefined,
+    targetNode: guideRendererElement || null,
+  })
 
   const [subscriptionSectionElement] = useElementReady({
     mutationCallback: getSubscriptionsSectionElement,
-    targetNode: document.getElementById('sections'),
+    targetNode: sectionsElement || null,
   })
 
   return {
     idToken,
     isDarkTheme,
     guideRendererElement,
-    sectionsElement: document.getElementById('sections') || undefined,
-    subscriptionSectionElement: subscriptionSectionElement,
+    sectionsElement,
+    subscriptionSectionElement,
     ytdAppElement,
   }
 }

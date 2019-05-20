@@ -10,11 +10,10 @@ export type useElementReadyReturn = [Element | undefined] & {
 }
 
 export const useElementReady: (props: Props) => useElementReadyReturn = (props) => {
-  const [element, setElement] = React.useState<Element | undefined>(undefined)
+  const [element, setElement] = React.useState<Element | undefined>(props.mutationCallback())
 
   const handler = React.useCallback<MutationCallback>((records, observer) => {
     const callbackReturn = props.mutationCallback()
-
     if (callbackReturn !== undefined) {
       observer.disconnect()
       observer.takeRecords()

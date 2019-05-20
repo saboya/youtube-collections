@@ -1,24 +1,48 @@
 const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ChromeManifestGeneratorPlugin = require('webpack-chrome-manifest-generator-plugin').default
 const pkg = require('./package.json')
 const WriteFilePlugin = require('write-file-webpack-plugin')
 
 // chromium --load-extension=path/to/extension
 
-module.exports = {
+module.exports = (env, argv) => ({
   target: 'web',
   entry: {
-    "default": './lib/js/src/scripts/default.js',
+    'main': './src/main.tsx',
+  },
+  devtool: 'source-map',
+  resolve: {
+    extensions: ['.js', '.jsx', '.json', '.ts', '.tsx', '.css'],
   },
   module: {
     rules: [
       {
+        test: /\.(ts|tsx)$/,
+        loader: 'ts-loader',
+        options: {
+          compilerOptions: {
+            declaration: env === 'development',
+          },
+        },
+      },
+      {
+        enforce: 'pre',
+        test: /\.js$/,
+        loader: 'source-map-loader',
+      },
+      { /* css non-modules */
         test: /\.css$/,
         use: [
-          { loader: "style-loader" },
-          { loader: "css-loader" }
-        ]
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 1,
+              sourceMap: env === 'development',
+            },
+          },
+        ],
       },
       {
         test: /\.(png|jpg|gif)$/,
@@ -41,4 +65,4 @@ module.exports = {
     path: path.join(__dirname, "dist"),
     filename: '[name].js',
   },
-}
+})

@@ -6,21 +6,32 @@
   "repository": "git@github.com:saboya/youtube-collections.git",
   "author": "Rodrigo Saboya <saboya@users.noreply.github.com>",
   "license": "MIT",
+  "scripts": {
+    "dev": "webpack --env development --mode=development --watch"
+  },
   "devDependencies": {
+    "@types/chrome": "^0.0.85",
     "@types/jest": "^24.0.13",
     "@types/react": "^16.8.17",
     "@types/react-dom": "^16.8.4",
     "@types/webpack": "^4.4.31",
     "@types/webpack-sources": "^0.1.5",
+    "css-loader": "^2.1.1",
     "jest": "^24.8.0",
     "jest-junit": "^6.4.0",
+    "source-map-loader": "^0.2.4",
+    "style-loader": "^0.23.1",
     "ts-jest": "^24.0.2",
+    "ts-loader": "^6.0.1",
     "tslint": "^5.16.0",
     "tslint-config-standard": "^8.0.1",
     "typescript": "^3.4.5",
+    "url-loader": "^1.1.2",
     "webpack": "^4.30.0",
     "webpack-chrome-manifest-generator-plugin": "^1.0.1",
-    "webpack-dev-server": "^3.4.1"
+    "webpack-cli": "^3.3.2",
+    "webpack-dev-server": "^3.4.1",
+    "write-file-webpack-plugin": "^4.5.0"
   },
   "dependencies": {
     "react": "^16.8.6",

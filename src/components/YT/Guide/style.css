@@ -1,0 +1,25 @@
+.ytc__section__style {
+    color: var(--yt-spec-text-secondary);
+    font-size: 1.4rem;
+    padding: 8px 24px;
+    text-transform: uppercase;
+}
+
+.ytc__section__list__item {
+    color: var(--yt-guide-entry-text-color);
+    min-height: var(--paper-item-min-height, 48px);
+}
+
+.ytc__section__list__item:hover {
+    background-color: var(--yt-spec-10-percent-layer);
+    cursor: pointer;
+}
+
+.ytc__paper__item {
+    display: var(--layout-horizontal_-_display);
+    white-space: var(--paper-item_-_white-space);
+    font-size: var(--paper-item_-_font-size, var(--paper-font-subhead_-_font-size));
+    font-weight: var(--paper-item_-_font-weight, var(--paper-font-subhead_-_font-weight));
+    line-height: var(--paper-item_-_line-height, var(--paper-font-subhead_-_line-height));
+    width: 100%;
+}
