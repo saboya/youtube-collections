@@ -13,7 +13,7 @@ export const SectionItem: React.FunctionComponent<Props> = (props) => {
   return (
     <li className={style.ytc__section__list__item}>
       <div className={style.ytc__paper__item}>
-        <span className='title style-scope ytd-guide-entry-renderer'>
+        <span className={style.temp}>
           {props.label}
         </span>
       </div>

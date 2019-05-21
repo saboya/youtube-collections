@@ -7,7 +7,6 @@
 
 .ytc__section__list__item {
     color: var(--yt-guide-entry-text-color);
-    min-height: var(--paper-item-min-height, 48px);
 }
 
 .ytc__section__list__item:hover {
@@ -21,5 +20,9 @@
     font-size: var(--paper-item_-_font-size, var(--paper-font-subhead_-_font-size));
     font-weight: var(--paper-item_-_font-weight, var(--paper-font-subhead_-_font-weight));
     line-height: var(--paper-item_-_line-height, var(--paper-font-subhead_-_line-height));
-    width: 100%;
+    min-height: var(--paper-item-min-height, 48px);
+    align-items: center;
+    padding: 0 24px;
+    font-family: var(--paper-font-subhead_-_font-family);
+    -webkit-font-smoothing: var(--paper-font-subhead_-_-webkit-font-smoothing);
 }
