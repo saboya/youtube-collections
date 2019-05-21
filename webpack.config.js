@@ -2,15 +2,16 @@ const path = require('path')
 const ChromeManifestGeneratorPlugin = require('webpack-chrome-manifest-generator-plugin').default
 const pkg = require('./package.json')
 const WriteFilePlugin = require('write-file-webpack-plugin')
+const ExtensionReloader  = require('webpack-extension-reloader')
 
 // chromium --load-extension=path/to/extension
 
 module.exports = (env, argv) => ({
   target: 'web',
   entry: {
-    'main': './src/main.tsx',
+    'content-script': './src/main.tsx',
+    background: './src/background.ts',
   },
-  devtool: 'source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.json', '.ts', '.tsx', '.css'],
   },
@@ -24,11 +25,6 @@ module.exports = (env, argv) => ({
             declaration: env === 'development',
           },
         },
-      },
-      {
-        enforce: 'pre',
-        test: /\.js$/,
-        loader: 'source-map-loader',
       },
       { /* css non-modules */
         test: /\.css$/,
@@ -51,6 +47,7 @@ module.exports = (env, argv) => ({
     ],
   },
   plugins: [
+    new ExtensionReloader(),
     new ChromeManifestGeneratorPlugin({
       name: 'Youtube Collections',
       package: {
@@ -58,6 +55,7 @@ module.exports = (env, argv) => ({
         description: pkg.description,
         version: pkg.version,
       },
+      content_security_policy: 'script-src \'self\' \'unsafe-eval\'; object-src \'self\'',
     }),
     new WriteFilePlugin(),
   ],
