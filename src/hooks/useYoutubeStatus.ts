@@ -1,9 +1,10 @@
 import * as React from 'react'
 
 import useElementReady from './useElementReady'
+import useInjectScript from './useInjectScript'
 
 type useYoutubeStatusReturn = {
-  idToken: string,
+  idToken: string | undefined,
   isDarkTheme: boolean,
   guideRendererElement: Element | undefined,
   sectionsElement: Element | undefined,
@@ -11,8 +12,16 @@ type useYoutubeStatusReturn = {
   ytdAppElement: Element | undefined,
 }
 
+declare global {
+  const yt: {
+    config_: {
+      ID_TOKEN: string,
+    },
+  }
+}
+
 export const useYoutubeStatus: () => useYoutubeStatusReturn = () => {
-  const idToken = ''
+  const [idToken] = useInjectScript(() => yt.config_.ID_TOKEN)
 
   const isDarkTheme = document.documentElement.getAttribute('dark') !== null
 
