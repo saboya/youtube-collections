@@ -7,9 +7,9 @@ import { CollectionsSection } from './components/CollectionsSection'
 
 const collectionIcon = require('../collections-48.png')
 
-/*__TYPE__: "content"*/
-/*__MATCHES__: ["https://www.youtube.com/*"]*/
-/*__RUN_AT__: "document_end"*/
+/* __TYPE__: "content" */
+/* __MATCHES__: ["https://www.youtube.com/*"] */
+/* __RUN_AT__: "document_end" */
 
 const renderRoot = document.createElement('div')
 

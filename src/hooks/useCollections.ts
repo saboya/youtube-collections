@@ -5,7 +5,7 @@ interface Collection {
 }
 
 export type useCollectionsReturn = [Collection[]] & {
-  collections: Collection[],
+  collections: Collection[]
 }
 
 export const useCollections: () => useCollectionsReturn = () => {

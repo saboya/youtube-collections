@@ -1,18 +1,18 @@
 import * as React from 'react'
 
 interface Props {
-  mutationCallback: () => Element | undefined,
-  targetNode: Node | null,
+  mutationCallback: () => Element | undefined
+  targetNode: Node | null
 }
 
 export type useElementReadyReturn = [Element | undefined] & {
-  element: Element | undefined,
+  element: Element | undefined
 }
 
 export const useElementReady: (props: Props) => useElementReadyReturn = (props) => {
   const [element, setElement] = React.useState<Element | undefined>(props.mutationCallback())
 
-  const handler = React.useCallback<MutationCallback>((records, observer) => {
+  const handler = React.useCallback<MutationCallback>((_, observer) => {
     const callbackReturn = props.mutationCallback()
     if (callbackReturn !== undefined) {
       observer.disconnect()

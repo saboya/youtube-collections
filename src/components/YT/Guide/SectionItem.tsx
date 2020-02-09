@@ -4,8 +4,8 @@ const style = require('./style.css')
 
 interface Props {
   label?: string
-  image: string,
-  counter: number,
+  image: string
+  counter: number
   uri: string
 }
 

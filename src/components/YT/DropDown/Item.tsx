@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 export interface Props {
-  checked: boolean,
+  checked: boolean
 }
 
 export const Item: React.FunctionComponent<Props> = (props) => (

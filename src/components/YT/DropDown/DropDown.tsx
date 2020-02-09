@@ -8,6 +8,6 @@ export interface Props {
 
 export const DropDown: React.FunctionComponent<Props> = (props) => (
   <div id='guide-section-title' className='style-scope ytd-guide-section-renderer'>
-  {props.children}
+    {props.children}
   </div>
 )

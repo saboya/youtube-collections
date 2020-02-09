@@ -1,7 +1,7 @@
 interface Subscription {}
 
 export type useSubscritionsReturn = [Subscription] & {
-  subscriptions: Subscription[],
+  subscriptions: Subscription[]
 }
 
 export const useSubscritions: () => useSubscritionsReturn = () => {
