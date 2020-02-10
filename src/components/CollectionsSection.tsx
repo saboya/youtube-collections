@@ -2,22 +2,18 @@ import * as React from 'react'
 import useYoutubeStatus from '../hooks/useYoutubeStatus'
 import { createPortal } from 'react-dom'
 
-interface Props {
-  children: () => React.ReactElement
-}
-
-const newSectionElement = () => {
+const newSectionElement: () => HTMLElement = () => {
   const element = document.createElement('ytd-guide-section-renderer')
   element.setAttribute('class', 'style-scope ytd-guide-renderer')
 
   return element
 }
 
-export const CollectionsSection: React.FunctionComponent<Props> = (props) => {
+export const CollectionsSection: React.FunctionComponent = (props) => {
   const [portalElement, setPortalElement] = React.useState<HTMLElement>()
   const { sectionsElement, subscriptionSectionElement } = useYoutubeStatus()
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (sectionsElement !== undefined && subscriptionSectionElement !== undefined) {
       const collectionsSectionElement = newSectionElement()
 
@@ -29,6 +25,6 @@ export const CollectionsSection: React.FunctionComponent<Props> = (props) => {
   }, [sectionsElement, subscriptionSectionElement])
 
   return portalElement !== undefined
-    ? createPortal(props.children(), portalElement)
+    ? createPortal(props.children, portalElement)
     : null
 }

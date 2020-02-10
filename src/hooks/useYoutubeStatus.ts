@@ -42,11 +42,7 @@ export const useYoutubeStatus: () => useYoutubeStatusReturn = () => {
       ))
       .find(elem => elem.innerHTML === 'Subscriptions')
 
-    if (elem !== undefined) {
-      return elem.closest('ytd-guide-section-renderer') ?? undefined
-    }
-
-    return undefined
+    return elem?.closest('ytd-guide-section-renderer') ?? undefined
   }, [])
 
   const [sectionsElement] = useElementReady({

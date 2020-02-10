@@ -1,6 +1,5 @@
 import * as React from 'react'
-
-const style = require('./style.css')
+import { PaperItem, YtdGuideEntryRenderer, YtFormattedString, YtIcon, YtImgShadow } from '../BasicElements'
 
 interface Props {
   label?: string
@@ -11,12 +10,18 @@ interface Props {
 
 export const SectionItem: React.FunctionComponent<Props> = (props) => {
   return (
-    <li className={style.ytc__section__list__item}>
-      <div className={style.ytc__paper__item}>
-        <span className={style.temp}>
-          {props.label}
-        </span>
-      </div>
-    </li>
+    <YtdGuideEntryRenderer class={'style-scope ytd-guide-section-renderer'} line-end-style={'badge'}>
+      <a id={'endpoint'} className={'yt-simple-endpoint style-scope ytd-guide-entry-renderer'} tabIndex={-1} role={'tablist'}>
+        <PaperItem role={'tab'} class={'style-scope ytd-guide-entry-renderer'} tabindex={'0'} aria-disabled={'false'}>
+          <YtIcon class={'guide-icon style-scope ytd-guide-entry-renderer'} disable-upgrade={''}></YtIcon>
+          <YtImgShadow height={'24'} width={'24'} class="style-scope ytd-guide-entry-renderer" disable-upgrade={''}>
+          </YtImgShadow>
+          <YtFormattedString class="title style-scope ytd-guide-entry-renderer">{props.label}</YtFormattedString>
+          <span className={'guide-entry-count style-scope ytd-guide-entry-renderer'}></span>
+          <YtIcon class={'guide-entry-badge style-scope ytd-guide-entry-renderer'} disable-upgrade={''}></YtIcon>
+          <div id={'newness-dot'} className={'style-scope ytd-guide-entry-renderer'}></div>
+        </PaperItem>
+      </a>
+    </YtdGuideEntryRenderer>
   )
 }
