@@ -5,35 +5,36 @@ interface Props {
   targetNode: Node | null
 }
 
-export type useElementReadyReturn = [Element | undefined] & {
-  element: Element | undefined
-}
-
-export const useElementReady: (props: Props) => useElementReadyReturn = (props) => {
+export const useElementReady: (props: Props) => [Element | undefined] = (props) => {
   const [element, setElement] = React.useState<Element | undefined>(props.mutationCallback())
 
   const handler = React.useCallback<MutationCallback>((_, observer) => {
     const callbackReturn = props.mutationCallback()
-    if (callbackReturn !== undefined) {
-      observer.disconnect()
-      observer.takeRecords()
-
-      setElement(callbackReturn)
+    if (callbackReturn === undefined) {
+      return
     }
+
+    observer.disconnect()
+    observer.takeRecords()
+
+    setElement(callbackReturn)
   }, [props.mutationCallback])
 
   React.useEffect(() => {
-    if (props.targetNode !== null && element === undefined) {
-      const observer = new MutationObserver(handler)
-
-      observer.observe(props.targetNode, { childList: true })
+    if (props.targetNode === null || element !== undefined) {
+      return
     }
-  }, [props.targetNode])
 
-  const temp = [element] as any
-  temp.element = element
+    const observer = new MutationObserver(handler)
 
-  return temp
+    observer.observe(props.targetNode, { childList: true })
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [handler, props.targetNode])
+
+  return [element]
 }
 
 export default useElementReady
