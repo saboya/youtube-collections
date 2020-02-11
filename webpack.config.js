@@ -13,6 +13,10 @@ module.exports = (env, argv) => ({
     background: './src/background.ts',
   },
   resolve: {
+    alias: {
+      'react': 'preact/compat',
+      'react-dom': 'preact/compat',
+    },
     extensions: ['.js', '.jsx', '.json', '.ts', '.tsx', '.css'],
   },
   devtool: 'inline-source-map',
