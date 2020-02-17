@@ -35,10 +35,9 @@ const cache = new WeakMap<Function, any>()
 
 export const useInjectScript: <T>(injectedFunction: () => T) => [T | undefined] = (injectedFunction) => {
   const [state, setState] = React.useState<ReturnType<typeof injectedFunction> | undefined>()
-  const memoizedFunction = React.useMemo(() => injectedFunction, [String(injectedFunction)])
+  const funcString = React.useMemo(() => String(injectedFunction), [injectedFunction])
 
-  const funcString = String(injectedFunction)
-  const funcId = React.useMemo(() => hashCode(funcString + new Date().toString()), [])
+  const funcId = React.useMemo(() => hashCode(funcString + new Date().toString()), [injectedFunction])
 
   React.useEffect(() => {
     if (cache.has(injectedFunction)) {
@@ -46,7 +45,7 @@ export const useInjectScript: <T>(injectedFunction: () => T) => [T | undefined] 
       return
     }
 
-    injectString(` ${injectedFuncName}(${funcId}, ${String(funcString)})`)
+    injectString(` ${injectedFuncName}(${funcId}, ${funcString})`)
 
     const callback: (event: MessageEvent) => void = (e) => {
       if (e.source === window && e.data.type === 'YTC_MSG' && e.data.id === funcId) {
@@ -58,7 +57,7 @@ export const useInjectScript: <T>(injectedFunction: () => T) => [T | undefined] 
     window.addEventListener('message', callback)
 
     return () => window.removeEventListener('message', callback)
-  }, [memoizedFunction])
+  }, [funcId])
 
   return [state]
 }
