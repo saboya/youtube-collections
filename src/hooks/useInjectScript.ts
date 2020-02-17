@@ -31,6 +31,8 @@ const script = `;(() => window['${injectedFuncName}'] = (id, data) => {
 
 injectString(script)
 
+const cache = new WeakMap<Function, any>()
+
 export const useInjectScript: <T>(injectedFunction: () => T) => [T | undefined] = (injectedFunction) => {
   const [state, setState] = React.useState<ReturnType<typeof injectedFunction> | undefined>()
   const memoizedFunction = React.useMemo(() => injectedFunction, [String(injectedFunction)])
@@ -39,12 +41,17 @@ export const useInjectScript: <T>(injectedFunction: () => T) => [T | undefined] 
   const funcId = React.useMemo(() => hashCode(funcString + new Date().toString()), [])
 
   React.useEffect(() => {
+    if (cache.has(injectedFunction)) {
+      setState(cache.get(injectedFunction))
+      return
+    }
+
     injectString(` ${injectedFuncName}(${funcId}, ${String(funcString)})`)
 
     const callback: (event: MessageEvent) => void = (e) => {
       if (e.source === window && e.data.type === 'YTC_MSG' && e.data.id === funcId) {
+        cache.set(injectedFunction, e.data.data)
         setState(e.data.data)
-      } else {
       }
     }
 

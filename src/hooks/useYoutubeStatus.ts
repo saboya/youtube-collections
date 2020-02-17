@@ -2,9 +2,11 @@ import * as React from 'react'
 
 import useElementReady from './useElementReady'
 import useInjectScript from './useInjectScript'
+import { YouTube } from '../components/YT'
 
 interface useYoutubeStatusReturn {
   idToken: string | undefined
+  ytInitialGuideData: YouTube.InitialGuideData | undefined
   isDarkTheme: boolean
   guideRendererElement: Element | undefined
   sectionsElement: Element | undefined
@@ -12,16 +14,14 @@ interface useYoutubeStatusReturn {
   ytdAppElement: Element | undefined
 }
 
-declare global {
-  const yt: {
-    config_: {
-      ID_TOKEN: string
-    }
-  }
-}
+const getYtToken = (): string => window.yt.config_.ID_TOKEN
+
+const getYtInitialGuideData = (): YouTube.InitialGuideData => window.ytInitialGuideData
 
 export const useYoutubeStatus: () => useYoutubeStatusReturn = () => {
-  const [idToken] = useInjectScript(() => yt.config_.ID_TOKEN)
+  const [idToken] = useInjectScript(getYtToken)
+
+  const [ytInitialGuideData] = useInjectScript(getYtInitialGuideData)
 
   const isDarkTheme = document.documentElement.getAttribute('dark') !== null
 
@@ -57,6 +57,7 @@ export const useYoutubeStatus: () => useYoutubeStatusReturn = () => {
 
   return {
     idToken,
+    ytInitialGuideData,
     isDarkTheme,
     guideRendererElement,
     sectionsElement,

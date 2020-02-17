@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "lib": [ "dom", "es2017"],
+    "lib": [ "dom", "es2017", "esnext.array"],
     "outDir": "lib",
     "target": "es6",
     "module": "commonjs",
