@@ -6,7 +6,7 @@ interface Props {
 }
 
 export const useElementReady: (props: Props) => [Element | undefined] = (props) => {
-  const [element, setElement] = Hooks.useState<Element | undefined>(props.mutationCallback())
+  const [element, setElement] = Hooks.useState<Element | undefined>(undefined)
 
   const handler = Hooks.useCallback<MutationCallback>((_, observer) => {
     const callbackReturn = props.mutationCallback()
@@ -21,7 +21,12 @@ export const useElementReady: (props: Props) => [Element | undefined] = (props) 
   }, [props.mutationCallback])
 
   Hooks.useEffect(() => {
-    if (props.targetNode === null || element !== undefined) {
+    if (props.targetNode === null) {
+      return
+    }
+
+    if (props.mutationCallback() !== undefined) {
+      setElement(props.mutationCallback())
       return
     }
 
@@ -31,6 +36,7 @@ export const useElementReady: (props: Props) => [Element | undefined] = (props) 
 
     return () => {
       observer.disconnect()
+      observer.takeRecords()
     }
   }, [handler, props.targetNode])
 
