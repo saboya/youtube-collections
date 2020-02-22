@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as Hooks from 'preact/hooks'
 
 import useElementReady from './useElementReady'
 import useInjectScript from './useInjectScript'
@@ -35,7 +35,7 @@ export const useYoutubeStatus: () => useYoutubeStatusReturn = () => {
     targetNode: document.getElementById('guide-inner-content'),
   })
 
-  const getSubscriptionsSectionElement = React.useCallback(() => {
+  const getSubscriptionsSectionElement = Hooks.useCallback(() => {
     const elem = Array
       .from(document.querySelectorAll(
         '#guide-renderer > #sections > ytd-guide-section-renderer > h3 > #guide-section-title',

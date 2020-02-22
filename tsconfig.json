@@ -5,6 +5,7 @@
     "target": "es6",
     "module": "commonjs",
     "jsx": "react",
+    "jsxFactory": "h",
     "declaration": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,

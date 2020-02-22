@@ -1,6 +1,7 @@
-import * as React from 'react'
+/** jsx h */
+import Peact, { h } from 'preact'
 
-export const SectionItems: React.FunctionComponent = (props) => {
+export const SectionItems: Peact.FunctionComponent = (props) => {
   return <div id={'items'} className={'style-scope ytd-guide-section-renderer'}>
     {props.children}
   </div>

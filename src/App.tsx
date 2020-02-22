@@ -1,4 +1,5 @@
-import React from 'react'
+/** @jsx h */
+import Preact, { h } from 'preact'
 
 import useCollections from './hooks/useCollections'
 import { CollectionsSection } from './components/CollectionsSection'
@@ -7,7 +8,7 @@ import useSubscritions from './hooks/useSubscriptions'
 
 const collectionIcon = require('../collections-48.png')
 
-const App: React.FunctionComponent = () => {
+const App: Preact.FunctionComponent = () => {
   const [collections] = useCollections()
   const [subscriptions] = useSubscritions()
 

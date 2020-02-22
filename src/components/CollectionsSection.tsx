@@ -1,6 +1,8 @@
-import * as React from 'react'
+/** @jsx h */
+import Preact, { h, Fragment } from 'preact'
+import * as Hooks from 'preact/hooks'
+import { createPortal } from 'preact/compat'
 import useYoutubeStatus from '../hooks/useYoutubeStatus'
-import { createPortal } from 'react-dom'
 
 const newSectionElement: () => HTMLElement = () => {
   const element = document.createElement('ytd-guide-section-renderer')
@@ -9,11 +11,11 @@ const newSectionElement: () => HTMLElement = () => {
   return element
 }
 
-export const CollectionsSection: React.FunctionComponent = (props) => {
-  const [portalElement, setPortalElement] = React.useState<HTMLElement>()
+export const CollectionsSection: Preact.FunctionComponent = (props) => {
+  const [portalElement, setPortalElement] = Hooks.useState<HTMLElement | undefined>(undefined)
   const { sectionsElement, subscriptionSectionElement } = useYoutubeStatus()
 
-  React.useLayoutEffect(() => {
+  Hooks.useLayoutEffect(() => {
     if (sectionsElement !== undefined && subscriptionSectionElement !== undefined) {
       const collectionsSectionElement = newSectionElement()
 
@@ -25,6 +27,6 @@ export const CollectionsSection: React.FunctionComponent = (props) => {
   }, [sectionsElement, subscriptionSectionElement])
 
   return portalElement !== undefined
-    ? createPortal(props.children, portalElement)
+    ? createPortal(<Fragment>{props.children}</Fragment>, portalElement)
     : null
 }

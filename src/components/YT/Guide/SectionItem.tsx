@@ -1,4 +1,5 @@
-import * as React from 'react'
+/** @jsx h */
+import Preact, { h } from 'preact'
 import { PaperItem, YtdGuideEntryRenderer, YtFormattedString, YtIcon, YtImgShadow } from '../BasicElements'
 
 interface Props {
@@ -8,7 +9,7 @@ interface Props {
   uri: string
 }
 
-export const SectionItem: React.FunctionComponent<Props> = (props) => {
+export const SectionItem: Preact.FunctionComponent<Props> = (props) => {
   return (
     <YtdGuideEntryRenderer class={'style-scope ytd-guide-section-renderer'} line-end-style={'badge'}>
       <a id={'endpoint'} className={'yt-simple-endpoint style-scope ytd-guide-entry-renderer'} tabIndex={-1} role={'tablist'}>

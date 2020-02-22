@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as Hooks from 'preact/hooks'
 
 const hashCode: (code: string) => number = (code) => {
   let hash = 0
@@ -34,12 +34,12 @@ injectString(script)
 const cache = new WeakMap<Function, any>()
 
 export const useInjectScript: <T>(injectedFunction: () => T) => [T | undefined] = (injectedFunction) => {
-  const [state, setState] = React.useState<ReturnType<typeof injectedFunction> | undefined>()
-  const funcString = React.useMemo(() => String(injectedFunction), [injectedFunction])
+  const [state, setState] = Hooks.useState<ReturnType<typeof injectedFunction> | undefined>(undefined)
+  const funcString = Hooks.useMemo(() => String(injectedFunction), [injectedFunction])
 
-  const funcId = React.useMemo(() => hashCode(funcString + new Date().toString()), [injectedFunction])
+  const funcId = Hooks.useMemo(() => hashCode(funcString + new Date().toString()), [injectedFunction])
 
-  React.useEffect(() => {
+  Hooks.useEffect(() => {
     if (cache.has(injectedFunction)) {
       setState(cache.get(injectedFunction))
       return

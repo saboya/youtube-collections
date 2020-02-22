@@ -1,16 +1,8 @@
-import * as React from 'react'
+/** @jsx h */
+import Preact, { h } from 'preact'
 import { YtdFormattedString } from '../BasicElements'
 
-// // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-// const newYTFormattedString: () => HTMLElement = () => {
-//   const element = document.createElement('yt-formatted-string')
-//   element.setAttribute('id', 'guide-section-title')
-//   element.setAttribute('class', 'style-scope ytd-guide-section-renderer')
-//
-//   return element
-// }
-
-export const SectionTitle: React.FunctionComponent = (props) => {
+export const SectionTitle: Preact.FunctionComponent = (props) => {
   return <h3 className={'style-scope ytd-guide-section-renderer'}>
     <YtdFormattedString id={'guide-section-title'} class={'style-scope ytd-guide-section-renderer'}>
       {props.children}

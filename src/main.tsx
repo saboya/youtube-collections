@@ -1,5 +1,5 @@
-import React from 'react'
-import { render } from 'react-dom'
+/** @jsx h */
+import { h, render } from 'preact'
 import App from './App'
 
 /* __TYPE__: "content" */

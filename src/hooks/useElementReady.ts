@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as Hooks from 'preact/hooks'
 
 interface Props {
   mutationCallback: () => Element | undefined
@@ -6,9 +6,9 @@ interface Props {
 }
 
 export const useElementReady: (props: Props) => [Element | undefined] = (props) => {
-  const [element, setElement] = React.useState<Element | undefined>(props.mutationCallback())
+  const [element, setElement] = Hooks.useState<Element | undefined>(props.mutationCallback())
 
-  const handler = React.useCallback<MutationCallback>((_, observer) => {
+  const handler = Hooks.useCallback<MutationCallback>((_, observer) => {
     const callbackReturn = props.mutationCallback()
     if (callbackReturn === undefined) {
       return
@@ -20,7 +20,7 @@ export const useElementReady: (props: Props) => [Element | undefined] = (props) 
     setElement(callbackReturn)
   }, [props.mutationCallback])
 
-  React.useEffect(() => {
+  Hooks.useEffect(() => {
     if (props.targetNode === null || element !== undefined) {
       return
     }

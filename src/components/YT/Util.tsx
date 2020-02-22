@@ -1,7 +1,7 @@
-import React from 'react'
+import * as Preact from 'preact'
+import * as Hooks from 'preact/hooks'
 import { YouTube } from './index'
-
-type HTMLProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
+import { JSXInternal } from 'preact/src/jsx'
 
 type Unpacked<T> = T extends Array<infer U> ? U : T;
 
@@ -38,12 +38,12 @@ export function findSubscriptions (ytInitialGuideData: YouTube.InitialGuideData)
     )
 }
 
-export const clearFirst = <T extends HTMLProps>(WrappedComponent: React.ComponentType<T>) => {
+export const clearFirst = <T extends JSXInternal.HTMLAttributes<SVGElement>>(WrappedComponent: Preact.ComponentType<T>) => {
   return (props: T) => {
-    const elementRef = React.useRef<HTMLElement>(null)
-    const [refCleared, setRefCleared] = React.useState(false)
+    const elementRef = Hooks.useRef<HTMLElement>(null)
+    const [refCleared, setRefCleared] = Hooks.useState(false)
 
-    React.useLayoutEffect(() => {
+    Hooks.useLayoutEffect(() => {
       if (elementRef.current !== null) {
         elementRef.current.innerHTML = ''
         setRefCleared(true)
@@ -52,9 +52,9 @@ export const clearFirst = <T extends HTMLProps>(WrappedComponent: React.Componen
 
     const { children, ...propsWithoutChildren } = props
 
-    const childrenToRender = React.useMemo(() => refCleared ? children : null, [children, refCleared])
+    const childrenToRender = Hooks.useMemo(() => refCleared ? children : null, [children, refCleared])
 
-    return React.createElement(
+    return Preact.createElement(
       WrappedComponent,
       {
         ...propsWithoutChildren as T,
