@@ -1,30 +1,22 @@
-const path = require('path')
 const ChromeManifestGeneratorPlugin = require('webpack-chrome-manifest-generator-plugin').default
 const pkg = require('./package.json')
-const WriteFilePlugin = require('write-file-webpack-plugin')
-const ExtensionReloader  = require('webpack-extension-reloader')
 
 // chromium --load-extension=path/to/extension
 
-module.exports = (env, argv) => ({
+module.exports = (env, _) => ({
   target: 'web',
   entry: {
     'content-script': './src/main.tsx',
     background: './src/background.ts',
   },
   resolve: {
-    alias: {
-      'react': 'preact/compat',
-      'react-dom': 'preact/compat',
-    },
     extensions: ['.js', '.jsx', '.json', '.ts', '.tsx', '.css'],
   },
-  devtool: 'inline-source-map',
   module: {
     rules: [
       {
         test: /\.(ts|tsx)$/,
-        loader: 'ts-loader',
+        loader: require.resolve('ts-loader'),
         options: {
           compilerOptions: {
             declaration: env === 'development',
@@ -34,9 +26,9 @@ module.exports = (env, argv) => ({
       { /* css non-modules */
         test: /\.css$/,
         use: [
-          'style-loader',
+          require.resolve('style-loader'),
           {
-            loader: 'css-loader',
+            loader: require.resolve('css-loader'),
             options: {
               modules: true,
               importLoaders: 1,
@@ -47,12 +39,11 @@ module.exports = (env, argv) => ({
       },
       {
         test: /\.(png|jpg|gif)$/,
-        loader: 'url-loader',
+        loader: require.resolve('url-loader'),
       },
     ],
   },
   plugins: [
-    new ExtensionReloader(),
     new ChromeManifestGeneratorPlugin({
       name: 'Youtube Collections',
       package: {
@@ -62,10 +53,5 @@ module.exports = (env, argv) => ({
       },
       content_security_policy: 'script-src \'self\' \'unsafe-eval\'; object-src \'self\'',
     }),
-    new WriteFilePlugin(),
   ],
-  output: {
-    path: path.join(__dirname, "dist"),
-    filename: '[name].js',
-  },
 })
