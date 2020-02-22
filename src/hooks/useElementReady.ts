@@ -20,7 +20,7 @@ export const useElementReady: (props: Props) => Element | undefined = (props) =>
     setElement(callbackReturn)
   }, [props.mutationCallback])
 
-  Hooks.useEffect(() => {
+  Hooks.useLayoutEffect(() => {
     if (props.targetNode === null) {
       return
     }
