@@ -18,6 +18,12 @@ const getYtToken = (): string => window.yt.config_.ID_TOKEN
 
 const getYtInitialGuideData = (): YouTube.InitialGuideData => window.ytInitialGuideData
 
+const findYtdAppElement = (): Element | undefined => document.querySelector('ytd-app') ?? undefined
+
+const findGuideRendererElement = (): Element | undefined => document.getElementById('guide-renderer') ?? undefined
+
+const findSectionsElement = (): Element | undefined => document.querySelector('#guide-inner-content > ytd-guide-renderer #sections') ?? undefined
+
 export const useYoutubeStatus: () => useYoutubeStatusReturn = () => {
   const idToken = useInjectScript(getYtToken)
 
@@ -26,12 +32,12 @@ export const useYoutubeStatus: () => useYoutubeStatusReturn = () => {
   const isDarkTheme = document.documentElement.getAttribute('dark') !== null
 
   const ytdAppElement = useElementReady({
-    mutationCallback: () => document.querySelector('ytd-app') ?? undefined,
+    mutationCallback: findYtdAppElement,
     targetNode: document.querySelector('body'),
   })
 
   const guideRendererElement = useElementReady({
-    mutationCallback: () => document.getElementById('guide-renderer') ?? undefined,
+    mutationCallback: findGuideRendererElement,
     targetNode: document.getElementById('guide-inner-content'),
   })
 
@@ -46,7 +52,7 @@ export const useYoutubeStatus: () => useYoutubeStatusReturn = () => {
   }, [])
 
   const sectionsElement = useElementReady({
-    mutationCallback: () => document.querySelector('#guide-inner-content > ytd-guide-renderer #sections') ?? undefined,
+    mutationCallback: findSectionsElement,
     targetNode: guideRendererElement ?? null,
   })
 
