@@ -5,7 +5,7 @@ interface Props {
   targetNode: Node | null
 }
 
-export const useElementReady: (props: Props) => [Element | undefined] = (props) => {
+export const useElementReady: (props: Props) => Element | undefined = (props) => {
   const [element, setElement] = Hooks.useState<Element | undefined>(undefined)
 
   const handler = Hooks.useCallback<MutationCallback>((_, observer) => {
@@ -40,7 +40,7 @@ export const useElementReady: (props: Props) => [Element | undefined] = (props) 
     }
   }, [handler, props.targetNode])
 
-  return [element]
+  return element
 }
 
 export default useElementReady

@@ -33,7 +33,7 @@ injectString(script)
 
 const cache = new WeakMap<Function, any>()
 
-export const useInjectScript: <T>(injectedFunction: () => T) => [T | undefined] = (injectedFunction) => {
+export const useInjectScript: <T>(injectedFunction: () => T) => T | undefined = (injectedFunction) => {
   const [state, setState] = Hooks.useState<ReturnType<typeof injectedFunction> | undefined>(undefined)
   const funcString = Hooks.useMemo(() => String(injectedFunction), [injectedFunction])
 
@@ -59,7 +59,7 @@ export const useInjectScript: <T>(injectedFunction: () => T) => [T | undefined] 
     return () => window.removeEventListener('message', callback)
   }, [funcId])
 
-  return [state]
+  return state
 }
 
 export default useInjectScript
