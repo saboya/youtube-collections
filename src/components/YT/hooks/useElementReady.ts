@@ -1,16 +1,16 @@
 import * as Hooks from 'preact/hooks'
 
 interface Props {
-  mutationCallback: () => Element | undefined
+  mutationCallback: () => Element | null
   targetNode: Node | null
 }
 
-export const useElementReady: (props: Props) => Element | undefined = (props) => {
-  const [element, setElement] = Hooks.useState<Element | undefined>(undefined)
+export const useElementReady: (props: Props) => Element | null = (props) => {
+  const [element, setElement] = Hooks.useState<Element | null>(null)
 
   const handler = Hooks.useCallback<MutationCallback>((_, observer) => {
     const callbackReturn = props.mutationCallback()
-    if (callbackReturn === undefined) {
+    if (callbackReturn === null) {
       return
     }
 
@@ -25,7 +25,7 @@ export const useElementReady: (props: Props) => Element | undefined = (props) =>
       return
     }
 
-    if (props.mutationCallback() !== undefined) {
+    if (props.mutationCallback() !== null) {
       setElement(props.mutationCallback())
       return
     }

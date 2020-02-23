@@ -2,7 +2,7 @@ import * as Preact from 'preact'
 import { forwardRef } from 'preact/compat'
 import { JSXInternal } from 'preact/src/jsx'
 
-import { clearFirst } from './Util'
+import { clearFirst } from './hocs/clearFirst'
 
 type CustomElement = JSXInternal.HTMLAttributes<HTMLElement> | {
   class?: string

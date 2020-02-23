@@ -4,15 +4,11 @@ import Preact, { h } from 'preact'
 import useCollections from './hooks/useCollections'
 import { CollectionsSection } from './components/CollectionsSection'
 import YT from './components/YT'
-import useSubscritions from './hooks/useSubscriptions'
 
 const collectionIcon = require('../collections-48.png')
 
 const App: Preact.FunctionComponent = () => {
-  const [collections] = useCollections()
-  const [subscriptions] = useSubscritions()
-
-  console.log(subscriptions)
+  const collections = useCollections()
 
   return <CollectionsSection>
     <YT.Guide.SectionTitle>
