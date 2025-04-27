@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-type CustomElement = React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> | {
+type CustomElement = React.PropsWithChildren<React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>> | {
   class?: string
   tabindex?: string
 }

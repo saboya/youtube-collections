@@ -4,7 +4,7 @@ export interface Props {
   checked: boolean
 }
 
-export const Item: React.FunctionComponent<Props> = (props) => (
+export const Item: React.FunctionComponent<React.PropsWithChildren<Props>> = (props) => (
   <div id='guide-section-title' className='style-scope ytd-guide-section-renderer'>
     {props.children}
   </div>

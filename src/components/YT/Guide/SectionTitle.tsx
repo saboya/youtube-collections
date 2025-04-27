@@ -10,7 +10,7 @@ import { YtdFormattedString } from '../BasicElements'
 //   return element
 // }
 
-export const SectionTitle: React.FunctionComponent = (props) => {
+export const SectionTitle: React.FunctionComponent<React.PropsWithChildren> = (props) => {
   return <h3 className={'style-scope ytd-guide-section-renderer'}>
     <YtdFormattedString id={'guide-section-title'} class={'style-scope ytd-guide-section-renderer'}>
       {props.children}

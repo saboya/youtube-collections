@@ -1,0 +1,7 @@
+{
+  "rules": {
+    "no-magic-numbers": "off",
+    "unicorn/prefer-spread": "off"
+  },
+  "plugins": ["react", "unicorn", "typescript", "oxc"]
+}

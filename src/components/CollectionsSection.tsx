@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { type FC, type PropsWithChildren, useLayoutEffect, useState } from 'react'
 import useYoutubeStatus from '../hooks/useYoutubeStatus'
 import { createPortal } from 'react-dom'
 
@@ -9,11 +9,11 @@ const newSectionElement: () => HTMLElement = () => {
   return element
 }
 
-export const CollectionsSection: React.FunctionComponent = (props) => {
-  const [portalElement, setPortalElement] = React.useState<HTMLElement>()
+export const CollectionsSection: FC<PropsWithChildren> = (props) => {
+  const [portalElement, setPortalElement] = useState<HTMLElement>()
   const { sectionsElement, subscriptionSectionElement } = useYoutubeStatus()
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (sectionsElement !== undefined && subscriptionSectionElement !== undefined) {
       const collectionsSectionElement = newSectionElement()
 

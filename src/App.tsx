@@ -19,7 +19,7 @@ const App: React.FunctionComponent = () => {
           key={i}
           label={collection.label}
           image={collectionIcon}
-          uri={'#'}
+          uri='#'
           counter={collection.counter}
         />
       ))}
